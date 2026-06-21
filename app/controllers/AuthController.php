@@ -85,4 +85,67 @@ class AuthController extends Controller
 
     echo "Registration Successful";
 }
+public function login()
+{
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] =
+            bin2hex(random_bytes(32));
+    }
+
+    $this->view('auth/login');
+}
+
+public function authenticate()
+{
+    // CSRF Validation
+    if (
+        !isset($_POST['csrf_token']) ||
+        !hash_equals(
+            $_SESSION['csrf_token'],
+            $_POST['csrf_token']
+        )
+    ) {
+        die('Invalid CSRF Token');
+    }
+
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if (empty($email) || empty($password)) {
+        die('Email and Password are required');
+    }
+
+    $userModel = new User();
+
+    $user = $userModel->findByEmail($email);
+
+    if (!$user) {
+        die('Invalid Credentials');
+    }
+
+    if (!password_verify($password, $user['password'])) {
+        die('Invalid Credentials');
+    }
+
+    // Prevent Session Fixation
+    session_regenerate_id(true);
+
+    $_SESSION['logged_in'] = true;
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['user_name'] = $user['name'];
+    $_SESSION['user_email'] = $user['email'];
+
+    header('Location: /habittracker/public/dashboard');
+    exit;
+}
+
+public function logout()
+{
+    session_unset();
+    session_destroy();
+
+    header('Location: /habittracker/public/login');
+    exit;
+}
+
 }
