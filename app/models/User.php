@@ -58,4 +58,54 @@ class User extends Model
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function addXP($userId, $xp)
+    {
+        $sql = "
+        UPDATE users
+        SET xp = xp + :xp
+        WHERE id = :id
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':xp' => $xp,
+            ':id' => $userId
+        ]);
+    }
+
+    public function getById($id)
+    {
+        $sql = "
+        SELECT *
+        FROM users
+        WHERE id = :id
+        LIMIT 1
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':id' => $id
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateLevel($userId, $level)
+    {
+        $sql = "
+        UPDATE users
+        SET level = :level
+        WHERE id = :id
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':level' => $level,
+            ':id' => $userId
+        ]);
+    }
 }

@@ -11,6 +11,11 @@ class DashboardController extends Controller
 
         $habitModel = new Habit();
         $logModel = new HabitLog();
+        $userModel = new User();
+
+        $user = $userModel->getById(
+            $_SESSION['user_id']
+        );
 
         $totalHabits = $habitModel->countByUser(
             $_SESSION['user_id']
@@ -25,12 +30,29 @@ class DashboardController extends Controller
             $logModel->getSuccessRate(
                 $_SESSION['user_id']
             );
+
         $recentHabits =
             $habitModel->getRecentHabits(
                 $_SESSION['user_id']
             );
+
         $activeStreaks =
             $logModel->getActiveStreaksCount(
+                $_SESSION['user_id']
+            );
+
+        $longestStreak =
+            $logModel->getLongestStreak(
+                $_SESSION['user_id']
+            );
+
+        $weeklyCompletions =
+            $logModel->getWeeklyCompletions(
+                $_SESSION['user_id']
+            );
+
+        $weeklyActivity =
+            $logModel->getWeeklyActivity(
                 $_SESSION['user_id']
             );
 
@@ -39,7 +61,15 @@ class DashboardController extends Controller
             'completedToday' => $completedToday,
             'successRate' => $successRate,
             'recentHabits' => $recentHabits,
-            'activeStreaks' => $activeStreaks
+            'activeStreaks' => $activeStreaks,
+            'longestStreak' => $longestStreak,
+            'weeklyCompletions' => $weeklyCompletions,
+            'weeklyActivity' => $weeklyActivity,
+
+            // XP System
+            'xp' => $user['xp'],
+            'level' => $user['level'],
+            'xpProgress' => $user['xp'] % 100
         ]);
     }
 }

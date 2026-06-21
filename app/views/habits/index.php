@@ -3,6 +3,42 @@
 <div class="container">
 
     <h1 class="page-title">My Habits</h1>
+    <form method="GET" action="/habittracker/public/habits" class="filter-form">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search habits..."
+            value="<?= $_GET['search'] ?? '' ?>">
+
+        <select name="priority">
+            <option value="">All Priorities</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select>
+
+        <select name="category">
+            <option value="">All Categories</option>
+            <option value="Fitness">Fitness</option>
+            <option value="Learning">Learning</option>
+            <option value="Health">Health</option>
+            <option value="Productivity">Productivity</option>
+            <option value="Gratitude">Gratitude</option>
+        </select>
+
+        <select name="frequency">
+            <option value="">All Frequencies</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+            Filter
+        </button>
+
+    </form>
 
     <a
         class="btn btn-primary"

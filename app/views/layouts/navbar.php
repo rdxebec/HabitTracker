@@ -4,12 +4,12 @@
         Habit Tracker
     </div>
 
-    <?php if(isset($_SESSION['logged_in'])): ?>
+    <?php if (isset($_SESSION['logged_in'])): ?>
 
         <div class="nav-links">
 
             <?php
-                $currentPage = $_SERVER['REQUEST_URI'];
+            $currentPage = $_SERVER['REQUEST_URI'];
             ?>
 
             <a
@@ -23,6 +23,12 @@
                 href="/habittracker/public/habits">
                 Habits
             </a>
+
+            <li>
+                <a href="/habittracker/public/achievements">
+                    Achievements
+                </a>
+            </li>
 
             <a href="/habittracker/public/logout">
                 Logout

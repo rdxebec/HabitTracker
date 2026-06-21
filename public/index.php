@@ -5,9 +5,9 @@ session_start();
 spl_autoload_register(function ($class) {
 
     $paths = [
-        '../core/',
-        '../app/controllers/',
-        '../app/models/'
+        __DIR__ . '/../core/',
+        __DIR__ . '/../app/controllers/',
+        __DIR__ . '/../app/models/'
     ];
 
     foreach ($paths as $path) {

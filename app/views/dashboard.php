@@ -62,6 +62,51 @@
 
         </div>
 
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Longest Streak
+            </div>
+
+            <div class="stat-value">
+                🏆 <?= $longestStreak ?>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Weekly Progress
+            </div>
+
+            <div class="stat-value">
+                📈 <?= $weeklyCompletions ?>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="analytics-card">
+
+        <h2>Level <?= $level ?></h2>
+
+        <p><?= $xp ?> XP</p>
+
+        <div class="xp-bar">
+
+            <div
+                class="xp-fill"
+                style="width: <?= $xpProgress ?>%;"></div>
+
+        </div>
+
+        <small>
+            <?= $xpProgress ?>/100 XP to next level
+        </small>
+
     </div>
 
     <div class="quick-actions">
@@ -73,14 +118,14 @@
         <div class="action-buttons">
 
             <a
-            class="btn btn-primary"
-            href="/habittracker/public/habits/create">
+                class="btn btn-primary"
+                href="/habittracker/public/habits/create">
                 Create Habit
             </a>
 
             <a
-            class="btn btn-success"
-            href="/habittracker/public/habits">
+                class="btn btn-success"
+                href="/habittracker/public/habits">
                 Manage Habits
             </a>
 
@@ -89,39 +134,69 @@
     </div>
     <div class="recent-card">
 
-    <h2>
-        Recent Habits
-    </h2>
+        <h2>
+            Recent Habits
+        </h2>
 
-    <?php if(empty($recentHabits)): ?>
+        <?php if (empty($recentHabits)): ?>
 
-        <p>
-            No habits created yet.
-        </p>
+            <p>
+                No habits created yet.
+            </p>
 
-    <?php else: ?>
+        <?php else: ?>
 
-        <ul class="recent-list">
+            <ul class="recent-list">
 
-            <?php foreach($recentHabits as $habit): ?>
+                <?php foreach ($recentHabits as $habit): ?>
 
-                <li>
+                    <li>
 
-                    📚
-                    <?= htmlspecialchars(
-                        $habit['title']
-                    ) ?>
+                        📚
+                        <?= htmlspecialchars(
+                            $habit['title']
+                        ) ?>
 
-                </li>
+                    </li>
+
+                <?php endforeach; ?>
+
+            </ul>
+
+        <?php endif; ?>
+
+    </div>
+
+    <div class="analytics-card">
+
+        <h2>Weekly Activity</h2>
+
+        <?php if (empty($weeklyActivity)): ?>
+
+            <p>No activity this week.</p>
+
+        <?php else: ?>
+
+            <?php foreach ($weeklyActivity as $day => $count): ?>
+
+                <div class="activity-row">
+
+                    <span>
+                        <?= $day ?>
+                    </span>
+
+                    <strong>
+                        <?= str_repeat('▓', $count) ?>
+                        (<?= $count ?>)
+                    </strong>
+
+                </div>
 
             <?php endforeach; ?>
 
-        </ul>
+        <?php endif; ?>
 
-    <?php endif; ?>
-
-</div>
-
+    </div>
 </div>
 
 <?php require_once __DIR__ . '/layouts/footer.php'; ?>

@@ -34,4 +34,6 @@ $router->get(
     '/habits/complete',
     [HabitController::class, 'complete']
 );
+
+$router->get('/achievements', [AchievementController::class, 'index']);
 ?>
