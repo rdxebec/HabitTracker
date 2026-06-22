@@ -59,4 +59,39 @@ class Achievement extends Model
             ':achievement_id' => $achievementId
         ]);
     }
+
+    public function getUserCompletionCount($userId)
+    {
+        $sql = "
+            SELECT COUNT(*) as total
+            FROM habit_logs hl
+            INNER JOIN habits h
+                ON hl.habit_id = h.id
+            WHERE h.user_id = ?
+        ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([$userId]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    public function unlockIfNotExists(
+        $userId,
+        $achievementId
+    )
+    {
+        if (
+            !$this->hasAchievement(
+                $userId,
+                $achievementId
+            )
+        ) {
+            $this->unlock(
+                $userId,
+                $achievementId
+            );
+        }
+    }
 }

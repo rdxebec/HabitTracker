@@ -110,6 +110,12 @@
                             Delete
                         </a>
 
+                        <a
+                            href="/habittracker/public/habits/history?id=<?= $habit['id'] ?>"
+                            class="btn">
+                            History
+                        </a>
+
                     </div>
 
                 </div>

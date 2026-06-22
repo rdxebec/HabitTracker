@@ -171,6 +171,27 @@ class HabitController extends Controller
                     $_SESSION['user_id'],
                     1
                 );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 First Habit Unlocked!';
+            }
+        }
+        if ($totalHabits >= 3) {
+
+            if (
+                !$achievementModel->hasAchievement(
+                    $_SESSION['user_id'],
+                    2
+                )
+            ) {
+
+                $achievementModel->unlock(
+                    $_SESSION['user_id'],
+                    2
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 3 Habits Unlocked!';
             }
         }
 
@@ -295,9 +316,146 @@ class HabitController extends Controller
                 $_SESSION['user_id'],
                 $level
             );
+
+
+            $achievementModel = new Achievement();
+
+
+
+            $totalCompletions =
+                $achievementModel->getUserCompletionCount(
+                    $_SESSION['user_id']
+                );
+
+            if ($totalCompletions >= 100) {
+
+                if (
+                    !$achievementModel->hasAchievement(
+                        $_SESSION['user_id'],
+                        5
+                    )
+                ) {
+
+                    $achievementModel->unlock(
+                        $_SESSION['user_id'],
+                        5
+                    );
+
+                    $_SESSION['achievement_notification'] =
+                        '🏆 100 Completions!';
+                }
+            }
+
+            $longestStreak =
+                $logModel->getLongestUserStreak(
+                    $_SESSION['user_id']
+                );
+
+            if ($longestStreak >= 7) {
+
+                if (
+                    !$achievementModel->hasAchievement(
+                        $_SESSION['user_id'],
+                        3
+                    )
+                ) {
+
+                    $achievementModel->unlock(
+                        $_SESSION['user_id'],
+                        3
+                    );
+
+                    $_SESSION['achievement_notification'] =
+                        '🏆 7 Day Streak!';
+                }
+            }
+
+            if ($longestStreak >= 30) {
+
+                if (
+                    !$achievementModel->hasAchievement(
+                        $_SESSION['user_id'],
+                        4
+                    )
+                ) {
+
+                    $achievementModel->unlock(
+                        $_SESSION['user_id'],
+                        4
+                    );
+
+                    $_SESSION['achievement_notification'] =
+                        '🏆 30 Day Streak!';
+                }
+            }
+
+            $challengeModel = new DailyChallenge();
+
+            if (
+                !$challengeModel->hasCompleted(
+                    $_SESSION['user_id'],
+                    3
+                )
+            ) {
+
+                $challengeModel->completeChallenge(
+                    $_SESSION['user_id'],
+                    3
+                );
+
+                $userModel->addXP(
+                    $_SESSION['user_id'],
+                    10
+                );
+            }
         }
 
         header('Location: /habittracker/public/habits');
         exit;
+    }
+
+    public function history()
+    {
+        if (!isset($_SESSION['logged_in'])) {
+            header('Location: /habittracker/public/login');
+            exit;
+        }
+
+        $habitId = (int)($_GET['id'] ?? 0);
+
+        $habitModel = new Habit();
+
+        $habit = $habitModel->findById($habitId);
+
+        if (
+            !$habit ||
+            $habit['user_id'] != $_SESSION['user_id']
+        ) {
+            die('Habit not found');
+        }
+
+        $logModel = new HabitLog();
+
+        $history =
+            $logModel->getHabitHistory(
+                $habitId
+            );
+
+        $currentStreak =
+            $logModel->getHabitCurrentStreak(
+                $habitId
+            );
+
+        $completionRate =
+            $logModel->getHabitCompletionRate(
+                $habitId
+            );
+
+        $this->view('habits/history', [
+            'habit' => $habit,
+            'history' => $history,
+            'currentStreak' => $currentStreak,
+            'completionRate' => $completionRate
+        ]);
     }
 }

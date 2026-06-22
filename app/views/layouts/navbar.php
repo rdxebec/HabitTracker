@@ -12,10 +12,18 @@
             $currentPage = $_SERVER['REQUEST_URI'];
             ?>
 
+            <a href="/habittracker/public/profile">
+                Profile
+            </a>
+
             <a
                 class="<?= strpos($currentPage, '/dashboard') !== false ? 'active' : '' ?>"
                 href="/habittracker/public/dashboard">
                 Dashboard
+            </a>
+
+            <a href="/habittracker/public/challenges">
+                Challenges
             </a>
 
             <a
@@ -29,6 +37,10 @@
                     Achievements
                 </a>
             </li>
+
+            <a href="/habittracker/public/analytics">
+                Analytics
+            </a>
 
             <a href="/habittracker/public/logout">
                 Logout

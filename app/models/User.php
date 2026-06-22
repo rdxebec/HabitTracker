@@ -108,4 +108,6 @@ class User extends Model
             ':id' => $userId
         ]);
     }
+
+    
 }

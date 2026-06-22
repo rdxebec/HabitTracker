@@ -36,4 +36,27 @@ $router->get(
 );
 
 $router->get('/achievements', [AchievementController::class, 'index']);
-?>
+
+$router->get(
+    '/challenges',
+    [ChallengeController::class, 'index']
+);
+$router->get(
+    '/challenges/join',
+    [ChallengeController::class, 'join']
+);
+
+$router->get(
+    '/habits/history',
+    [HabitController::class, 'history']
+);
+
+$router->get(
+    '/analytics',
+    [AnalyticsController::class,'index']
+);
+
+$router->get(
+    '/profile',
+    [DashboardController::class, 'profile']
+);

@@ -228,4 +228,124 @@ class HabitLog extends Model
 
         return $days;
     }
+
+    public function getHabitHistory($habitId)
+    {
+        $sql = "
+        SELECT completed_date
+        FROM habit_logs
+        WHERE habit_id = :habit_id
+        ORDER BY completed_date DESC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':habit_id' => $habitId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getHabitCurrentStreak($habitId)
+    {
+        return $this->getCurrentStreak($habitId);
+    }
+    public function getHabitCompletionRate($habitId)
+    {
+        $sql = "
+        SELECT COUNT(*) as total
+        FROM habit_logs
+        WHERE habit_id = :habit_id
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':habit_id' => $habitId
+        ]);
+
+        $completed =
+            $stmt->fetch()['total'] ?? 0;
+
+        return min(100, $completed * 10);
+    }
+
+    public function getMonthlyActivity($userId)
+    {
+        $sql = "
+        SELECT
+            completed_date,
+            COUNT(*) as total
+        FROM habit_logs hl
+        INNER JOIN habits h
+            ON h.id = hl.habit_id
+        WHERE h.user_id = :user_id
+        AND MONTH(completed_date) = MONTH(CURDATE())
+        AND YEAR(completed_date) = YEAR(CURDATE())
+        GROUP BY completed_date
+        ORDER BY completed_date
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countTotalCompletions($userId)
+    {
+        $sql = "
+        SELECT COUNT(*) as total
+        FROM habit_logs hl
+        INNER JOIN habits h
+            ON h.id = hl.habit_id
+        WHERE h.user_id = :user_id
+    ";
+
+        $stmt =
+            $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+
+        return $stmt->fetch()['total'];
+    }
+
+    public function getLongestUserStreak($userId)
+    {
+        $sql = "
+        SELECT id
+        FROM habits
+        WHERE user_id = :user_id
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+
+        $habits =
+            $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $longest = 0;
+
+        foreach ($habits as $habit) {
+
+            $streak =
+                $this->getCurrentStreak(
+                    $habit['id']
+                );
+
+            if ($streak > $longest) {
+                $longest = $streak;
+            }
+        }
+
+        return $longest;
+    }
 }
