@@ -454,3 +454,78 @@ textarea.form-control{
         transform:translateX(100%);
     }
 }
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 32px);
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.heat-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+}
+
+.heat-0 {
+    background: #e5e7eb;
+}
+
+.heat-1 {
+    background: #86efac;
+}
+
+.heat-2 {
+    background: #22c55e;
+}
+
+.heat-3 {
+    background: #166534;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.leaderboard-table th {
+    background: #f8fafc;
+}
+
+.level-card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.xp-bar {
+    width: 100%;
+    height: 20px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.xp-fill {
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        #4f46e5,
+        #8b5cf6
+    );
+    border-radius: 999px;
+    transition: width .6s ease;
+}

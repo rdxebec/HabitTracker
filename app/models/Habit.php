@@ -159,4 +159,76 @@ class Habit extends Model
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getTopHabits($userId)
+    {
+        $sql = "
+        SELECT
+            h.title,
+            COUNT(hl.id) as completions
+        FROM habits h
+        LEFT JOIN habit_logs hl
+            ON h.id = hl.habit_id
+        WHERE h.user_id = :user_id
+        GROUP BY h.id
+        ORDER BY completions DESC
+        LIMIT 5
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getBestHabit($userId)
+    {
+        $sql = "
+        SELECT
+            h.title,
+            COUNT(hl.id) as completions
+        FROM habits h
+        LEFT JOIN habit_logs hl
+            ON h.id = hl.habit_id
+        WHERE h.user_id = :user_id
+        GROUP BY h.id
+        ORDER BY completions DESC
+        LIMIT 1
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getWorstHabit($userId)
+    {
+        $sql = "
+        SELECT
+            h.title,
+            COUNT(hl.id) as completions
+        FROM habits h
+        LEFT JOIN habit_logs hl
+            ON h.id = hl.habit_id
+        WHERE h.user_id = :user_id
+        GROUP BY h.id
+        ORDER BY completions ASC
+        LIMIT 1
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

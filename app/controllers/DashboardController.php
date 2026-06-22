@@ -17,6 +17,25 @@ class DashboardController extends Controller
             $_SESSION['user_id']
         );
 
+        $currentXP = $user['xp'];
+
+        $currentLevel = $user['level'];
+
+        $xpForCurrentLevel =
+            ($currentLevel - 1) * 100;
+
+        $xpForNextLevel =
+            $currentLevel * 100;
+
+        $levelXP =
+            $currentXP - $xpForCurrentLevel;
+
+        $neededXP =
+            $xpForNextLevel - $xpForCurrentLevel;
+
+        $progressPercent =
+            ($levelXP / $neededXP) * 100;
+
         $totalHabits = $habitModel->countByUser(
             $_SESSION['user_id']
         );
@@ -65,6 +84,12 @@ class DashboardController extends Controller
             'longestStreak' => $longestStreak,
             'weeklyCompletions' => $weeklyCompletions,
             'weeklyActivity' => $weeklyActivity,
+            'progressPercent' => $progressPercent,
+            'levelXP' => $levelXP,
+            'neededXP' => $neededXP,
+            'currentLevel' => $currentLevel,
+            'xpRemaining' =>
+            $xpForNextLevel - $currentXP,
 
             // XP System
             'xp' => $user['xp'],

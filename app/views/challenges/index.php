@@ -23,8 +23,8 @@
                 </p>
 
                 <p>
-                    ⏳ <?= $challenge['duration_days'] ?>
-                    Days
+                    🎯 Target:
+                    <?= $challenge['target_value'] ?>
                 </p>
 
                 <p>
@@ -58,8 +58,7 @@
 
                     <a
                         href="/habittracker/public/challenges/join?id=<?= $challenge['id'] ?>"
-                        class="btn btn-primary"
-                    >
+                        class="btn btn-primary">
                         Join Challenge
                     </a>
 

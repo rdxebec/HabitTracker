@@ -54,6 +54,52 @@
 
     </div>
 
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <h3>🏆 Best Habit</h3>
+
+            <?php if ($bestHabit): ?>
+
+                <p>
+                    <?= htmlspecialchars(
+                        $bestHabit['title']
+                    ) ?>
+                </p>
+
+                <small>
+                    <?= $bestHabit['completions'] ?>
+                    completions
+                </small>
+
+            <?php endif; ?>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>😴 Needs Work</h3>
+
+            <?php if ($worstHabit): ?>
+
+                <p>
+                    <?= htmlspecialchars(
+                        $worstHabit['title']
+                    ) ?>
+                </p>
+
+                <small>
+                    <?= $worstHabit['completions'] ?>
+                    completions
+                </small>
+
+            <?php endif; ?>
+
+        </div>
+
+    </div>
+
     <div class="analytics-card">
 
         <h2>Monthly Activity</h2>
@@ -66,10 +112,131 @@
 
     <div class="analytics-card">
 
+        <h2>📈 XP Growth</h2>
+
+        <div class="chart-container">
+            <canvas id="xpChart"></canvas>
+        </div>
+
+    </div>
+
+    <div class="analytics-card">
+
         <h2>Category Distribution</h2>
 
         <div class="chart-container">
             <canvas id="categoryChart"></canvas>
+        </div>
+
+    </div>
+
+    <?php
+
+    $xpLabels = [];
+    $xpTotals = [];
+
+    foreach ($xpHistory as $row) {
+
+        $xpLabels[] = $row['day'];
+        $xpTotals[] = $row['total_xp'];
+    }
+
+    ?>
+
+    <div class="analytics-card">
+
+        <h2>🔥 Consistency Heatmap</h2>
+
+        <div class="heatmap-grid">
+
+            <?php
+            $heatmap = [];
+
+            foreach ($calendarData as $row) {
+                $heatmap[$row['completed_date']] = $row['total'];
+            }
+
+            for ($i = 29; $i >= 0; $i--) {
+
+                $date = date(
+                    'Y-m-d',
+                    strtotime("-$i days")
+                );
+
+                $count = $heatmap[$date] ?? 0;
+
+                if ($count == 0) {
+                    $class = 'heat-0';
+                } elseif ($count <= 2) {
+                    $class = 'heat-1';
+                } elseif ($count <= 5) {
+                    $class = 'heat-2';
+                } else {
+                    $class = 'heat-3';
+                }
+            ?>
+
+                <a
+                    href="/habittracker/public/analytics/day?date=<?= $date ?>"
+                    class="heat-box <?= $class ?>"
+                    title="<?= $date ?> (<?= $count ?> completions)">
+                </a>
+
+            <?php } ?>
+
+        </div>
+
+        <div class="analytics-card">
+
+            <h2>🏆 Habit Leaderboard</h2>
+
+            <table class="leaderboard-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Rank</th>
+                        <th>Habit</th>
+                        <th>Completions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <?php foreach ($topHabits as $index => $habit): ?>
+
+                        <tr>
+
+                            <td>
+
+                                <?php
+                                if ($index == 0) echo "🥇";
+                                elseif ($index == 1) echo "🥈";
+                                elseif ($index == 2) echo "🥉";
+                                else echo "#" . ($index + 1);
+                                ?>
+
+                            </td>
+
+                            <td>
+                                <?= htmlspecialchars(
+                                    $habit['title']
+                                ) ?>
+                            </td>
+
+                            <td>
+                                <?= $habit['completions'] ?>
+                            </td>
+
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
         </div>
 
     </div>
@@ -164,6 +331,45 @@
         options: {
             responsive: true,
             maintainAspectRatio: false
+        }
+
+    });
+
+    const xpCtx =
+        document.getElementById(
+            'xpChart'
+        );
+
+    new Chart(xpCtx, {
+
+        type: 'line',
+
+        data: {
+
+            labels: <?= json_encode($xpLabels) ?>,
+
+            datasets: [{
+
+                label: 'XP Earned',
+
+                data: <?= json_encode($xpTotals) ?>,
+
+                borderColor: '#22c55e',
+
+                backgroundColor: '#22c55e',
+
+                tension: 0.3
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false
+
         }
 
     });

@@ -60,4 +60,38 @@ class DailyChallenge extends Model
             ':challenge_id' => $challengeId
         ]);
     }
+
+    public function getChallenge($challengeId)
+    {
+        $sql = "
+        SELECT *
+        FROM daily_challenges
+        WHERE id = :id
+        LIMIT 1
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':id' => $challengeId
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function awardChallengeXP($userId, $challengeId)
+    {
+        $challenge = $this->getChallenge($challengeId);
+
+        if (!$challenge) {
+            return;
+        }
+
+        $userModel = new User();
+
+        $userModel->addXP(
+            $userId,
+            $challenge['xp_reward']
+        );
+    }
 }

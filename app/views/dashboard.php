@@ -1,5 +1,46 @@
 <?php require_once __DIR__ . '/layouts/header.php'; ?>
 
+<div class="level-card">
+
+    <h2>
+        ⭐ Level <?= $currentLevel ?>
+    </h2>
+
+    <p>
+
+        XP:
+        <?= $levelXP ?>
+
+        /
+
+        <?= $neededXP ?>
+
+    </p>
+
+    <div class="xp-bar">
+
+        <div
+            class="xp-fill"
+            style="
+                width:
+                <?= $progressPercent ?>%;
+            ">
+        </div>
+
+    </div>
+
+    <p>
+
+        <?= $xpRemaining ?>
+
+        XP until Level
+
+        <?= $currentLevel + 1 ?>
+
+    </p>
+
+</div>
+
 <div class="container">
 
     <h1>

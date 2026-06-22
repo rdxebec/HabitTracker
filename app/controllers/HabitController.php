@@ -298,99 +298,29 @@ class HabitController extends Controller
             $logModel->markComplete($habitId);
 
             $userModel = new User();
+            $challengeModel = new DailyChallenge();
+            $achievementModel = new Achievement();
 
+            // Base XP
             $userModel->addXP(
                 $_SESSION['user_id'],
                 10
             );
 
-            $user = $userModel->getById(
-                $_SESSION['user_id']
-            );
-
-            $xp = $user['xp'];
-
-            $level = floor($xp / 100) + 1;
-
-            $userModel->updateLevel(
-                $_SESSION['user_id'],
-                $level
-            );
-
-
-            $achievementModel = new Achievement();
-
-
-
-            $totalCompletions =
-                $achievementModel->getUserCompletionCount(
+            // Daily Challenges
+            $completedToday =
+                $logModel->countCompletedToday(
                     $_SESSION['user_id']
                 );
 
-            if ($totalCompletions >= 100) {
-
-                if (
-                    !$achievementModel->hasAchievement(
-                        $_SESSION['user_id'],
-                        5
+            $habitCount =
+                count(
+                    $habitModel->getByUserId(
+                        $_SESSION['user_id']
                     )
-                ) {
-
-                    $achievementModel->unlock(
-                        $_SESSION['user_id'],
-                        5
-                    );
-
-                    $_SESSION['achievement_notification'] =
-                        '🏆 100 Completions!';
-                }
-            }
-
-            $longestStreak =
-                $logModel->getLongestUserStreak(
-                    $_SESSION['user_id']
                 );
 
-            if ($longestStreak >= 7) {
-
-                if (
-                    !$achievementModel->hasAchievement(
-                        $_SESSION['user_id'],
-                        3
-                    )
-                ) {
-
-                    $achievementModel->unlock(
-                        $_SESSION['user_id'],
-                        3
-                    );
-
-                    $_SESSION['achievement_notification'] =
-                        '🏆 7 Day Streak!';
-                }
-            }
-
-            if ($longestStreak >= 30) {
-
-                if (
-                    !$achievementModel->hasAchievement(
-                        $_SESSION['user_id'],
-                        4
-                    )
-                ) {
-
-                    $achievementModel->unlock(
-                        $_SESSION['user_id'],
-                        4
-                    );
-
-                    $_SESSION['achievement_notification'] =
-                        '🏆 30 Day Streak!';
-                }
-            }
-
-            $challengeModel = new DailyChallenge();
-
+            // Challenge 3 - First Completion
             if (
                 !$challengeModel->hasCompleted(
                     $_SESSION['user_id'],
@@ -407,7 +337,137 @@ class HabitController extends Controller
                     $_SESSION['user_id'],
                     10
                 );
+
+                $_SESSION['achievement_notification'] =
+                    '🔥 First Completion Challenge Complete!';
             }
+
+            // Challenge 1 - Complete 3 Habits
+            if (
+                $completedToday >= 3 &&
+                !$challengeModel->hasCompleted(
+                    $_SESSION['user_id'],
+                    1
+                )
+            ) {
+
+                $challengeModel->completeChallenge(
+                    $_SESSION['user_id'],
+                    1
+                );
+
+                $challengeModel->awardChallengeXP(
+                    $_SESSION['user_id'],
+                    1
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🔥 Daily Challenge Complete: 3 Habits Today!';
+            }
+
+            // Challenge 2 - Complete All Habits
+            if (
+                $habitCount > 0 &&
+                $completedToday >= $habitCount &&
+                !$challengeModel->hasCompleted(
+                    $_SESSION['user_id'],
+                    2
+                )
+            ) {
+
+                $challengeModel->completeChallenge(
+                    $_SESSION['user_id'],
+                    2
+                );
+
+                $challengeModel->awardChallengeXP(
+                    $_SESSION['user_id'],
+                    2
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 Daily Challenge Complete: All Habits Finished!';
+            }
+
+            // Achievements
+
+            $totalCompletions =
+                $achievementModel->getUserCompletionCount(
+                    $_SESSION['user_id']
+                );
+
+            // 100 Completions
+            if (
+                $totalCompletions >= 100 &&
+                !$achievementModel->hasAchievement(
+                    $_SESSION['user_id'],
+                    5
+                )
+            ) {
+
+                $achievementModel->unlock(
+                    $_SESSION['user_id'],
+                    5
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 100 Completions!';
+            }
+
+            // 7 Day Streak
+            $longestStreak =
+                $logModel->getLongestUserStreak(
+                    $_SESSION['user_id']
+                );
+
+            if (
+                $longestStreak >= 7 &&
+                !$achievementModel->hasAchievement(
+                    $_SESSION['user_id'],
+                    3
+                )
+            ) {
+
+                $achievementModel->unlock(
+                    $_SESSION['user_id'],
+                    3
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 7 Day Streak!';
+            }
+
+            // 30 Day Streak
+            if (
+                $longestStreak >= 30 &&
+                !$achievementModel->hasAchievement(
+                    $_SESSION['user_id'],
+                    4
+                )
+            ) {
+
+                $achievementModel->unlock(
+                    $_SESSION['user_id'],
+                    4
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 30 Day Streak!';
+            }
+
+            // Update Level
+            $user = $userModel->getById(
+                $_SESSION['user_id']
+            );
+
+            $xp = $user['xp'];
+
+            $level = floor($xp / 100) + 1;
+
+            $userModel->updateLevel(
+                $_SESSION['user_id'],
+                $level
+            );
         }
 
         header('Location: /habittracker/public/habits');

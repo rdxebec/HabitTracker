@@ -53,10 +53,15 @@ $router->get(
 
 $router->get(
     '/analytics',
-    [AnalyticsController::class,'index']
+    [AnalyticsController::class, 'index']
 );
 
 $router->get(
     '/profile',
     [DashboardController::class, 'profile']
+);
+
+$router->get(
+    '/analytics/day',
+    [AnalyticsController::class,'day']
 );

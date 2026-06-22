@@ -69,12 +69,35 @@ class User extends Model
 
         $stmt = $this->db->prepare($sql);
 
-        return $stmt->execute([
+        $stmt->execute([
             ':xp' => $xp,
             ':id' => $userId
         ]);
-    }
 
+        $logSql = "
+        INSERT INTO xp_logs
+        (
+            user_id,
+            xp_gained,
+            created_at
+        )
+        VALUES
+        (
+            :user_id,
+            :xp_gained,
+            NOW()
+        )
+    ";
+
+        $logStmt = $this->db->prepare($logSql);
+
+        $logStmt->execute([
+            ':user_id' => $userId,
+            ':xp_gained' => $xp
+        ]);
+
+        return true;
+    }
     public function getById($id)
     {
         $sql = "
@@ -109,5 +132,24 @@ class User extends Model
         ]);
     }
 
-    
+    public function getXPHistory($userId)
+    {
+        $sql = "
+        SELECT
+            DATE(created_at) as day,
+            SUM(xp_gained) as total_xp
+        FROM xp_logs
+        WHERE user_id = :user_id
+        GROUP BY DATE(created_at)
+        ORDER BY day
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

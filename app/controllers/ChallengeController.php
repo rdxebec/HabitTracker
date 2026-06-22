@@ -9,23 +9,27 @@ class ChallengeController extends Controller
             exit;
         }
 
-        $challengeModel = new Challenge();
+        $challengeModel = new DailyChallenge();
 
-        $challenges =
-            $challengeModel->getAll();
-
-        $userChallenges =
-            $challengeModel->getUserChallenges(
-                $_SESSION['user_id']
-            );
+        $challenges = $challengeModel->getAll();
 
         $joined = [];
 
-        foreach ($userChallenges as $challenge) {
+        foreach ($challenges as $challenge) {
 
-            $joined[
-                $challenge['challenge_id']
-            ] = $challenge['completed'];
+            $completed =
+                $challengeModel->hasCompleted(
+                    $_SESSION['user_id'],
+                    $challenge['id']
+                );
+
+            if ($completed) {
+
+                $joined[$challenge['id']] = true;
+            } else {
+
+                $joined[$challenge['id']] = false;
+            }
         }
 
         $this->view(

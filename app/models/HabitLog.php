@@ -348,4 +348,52 @@ class HabitLog extends Model
 
         return $longest;
     }
+
+    public function getCalendarData($userId)
+    {
+        $sql = "
+        SELECT
+            hl.completed_date,
+            COUNT(*) as total
+        FROM habit_logs hl
+        INNER JOIN habits h
+            ON h.id = hl.habit_id
+        WHERE h.user_id = :user_id
+        GROUP BY hl.completed_date
+        ORDER BY hl.completed_date
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getHabitsByDate($userId, $date)
+    {
+        $sql = "
+        SELECT
+            h.title,
+            h.category,
+            hl.completed_date
+        FROM habit_logs hl
+        INNER JOIN habits h
+            ON h.id = hl.habit_id
+        WHERE h.user_id = :user_id
+        AND hl.completed_date = :completed_date
+        ORDER BY h.title
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':completed_date' => $date
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
