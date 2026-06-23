@@ -37,6 +37,11 @@
                     Achievements
                 </a>
             </li>
+            <li>
+                <a href="/habittracker/public/templates">
+                    Templates
+                </a>
+            </li>
 
             <a href="/habittracker/public/analytics">
                 Analytics

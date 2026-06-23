@@ -2,110 +2,138 @@
 
 <div class="container">
 
-    <h1>👤 Profile</h1>
+    <div class="profile-layout">
 
-    <div class="dashboard-grid">
+        <aside class="profile-sidebar">
 
-        <div class="stat-card">
-            <h3>Name</h3>
-            <h2>
-                <?= htmlspecialchars(
-                    $user['name']
-                ) ?>
-            </h2>
-        </div>
+            <h3>⚙️ Account</h3>
 
-        <div class="stat-card">
-            <h3>Level</h3>
-            <h2>
-                <?= $user['level'] ?>
-            </h2>
-        </div>
+            <a href="/habittracker/public/profile">
+                👤 Profile
+            </a>
+            <a href="/habittracker/public/profile/password">
+                🔒 Change Password
+            </a>
 
-        <div class="stat-card">
-            <h3>XP</h3>
-            <h2>
-                <?= $user['xp'] ?>
-            </h2>
-        </div>
+            <button id="theme-toggle">
+                🌙 Dark Mode
+            </button>
 
-        <div class="stat-card">
-            <h3>Achievements</h3>
-            <h2>
-                <?= $achievements ?>
-            </h2>
-        </div>
+            <a href="/habittracker/public/logout">
+                🚪 Logout
+            </a>
 
-        <div class="stat-card">
-            <h3>Total Habits</h3>
-            <h2>
-                <?= $totalHabits ?>
-            </h2>
-        </div>
+        </aside>
 
-        <div class="stat-card">
-            <h3>Total Completions</h3>
-            <h2>
-                <?= $totalCompletions ?>
-            </h2>
-        </div>
+        <div class="profile-content">
 
-        <div class="stat-card">
-            <h3>Longest Streak</h3>
-            <h2>
-                🔥 <?= $longestStreak ?>
-            </h2>
-        </div>
+            <h1>👤 Profile</h1>
+            <div class="dashboard-grid">
 
-        <div class="stat-card">
-            <h3>Member Since</h3>
-            <h2>
-                <?= date(
-                    'd M Y',
-                    strtotime(
-                        $user['created_at']
-                    )
-                ) ?>
-            </h2>
-        </div>
+                <div class="stat-card">
+                    <h3>Name</h3>
+                    <h2>
+                        <?= htmlspecialchars(
+                            $user['name']
+                        ) ?>
+                    </h2>
+                </div>
 
-    </div>
+                <div class="stat-card">
+                    <h3>Level</h3>
+                    <h2>
+                        <?= $user['level'] ?>
+                    </h2>
+                </div>
 
-    <div class="profile-achievements">
+                <div class="stat-card">
+                    <h3>XP</h3>
+                    <h2>
+                        <?= $user['xp'] ?>
+                    </h2>
+                </div>
 
-        <h2>🏆 Achievements</h2>
+                <div class="stat-card">
+                    <h3>Achievements</h3>
+                    <h2>
+                        <?= $achievements ?>
+                    </h2>
+                </div>
 
-        <?php if (empty($recentAchievements)): ?>
+                <div class="stat-card">
+                    <h3>Total Habits</h3>
+                    <h2>
+                        <?= $totalHabits ?>
+                    </h2>
+                </div>
 
-            <p>No achievements unlocked yet.</p>
+                <div class="stat-card">
+                    <h3>Total Completions</h3>
+                    <h2>
+                        <?= $totalCompletions ?>
+                    </h2>
+                </div>
 
-        <?php else: ?>
+                <div class="stat-card">
+                    <h3>Longest Streak</h3>
+                    <h2>
+                        🔥 <?= $longestStreak ?>
+                    </h2>
+                </div>
 
-            <div class="achievement-grid">
-
-                <?php foreach ($recentAchievements as $achievement): ?>
-
-                    <div class="achievement-card">
-
-                        <div class="achievement-icon">
-                            <?= $achievement['badge_icon'] ?>
-                        </div>
-
-                        <h3>
-                            <?= htmlspecialchars($achievement['name']) ?>
-                        </h3>
-
-                        <p>
-                            <?= htmlspecialchars($achievement['description']) ?>
-                        </p>
-
-                    </div>
-
-                <?php endforeach; ?>
+                <div class="stat-card">
+                    <h3>Member Since</h3>
+                    <h2>
+                        <?= date(
+                            'd M Y',
+                            strtotime(
+                                $user['created_at']
+                            )
+                        ) ?>
+                    </h2>
+                </div>
 
             </div>
 
-        <?php endif; ?>
+            <div class="profile-achievements">
+
+                <h2>🏆 Achievements</h2>
+
+                <?php if (empty($recentAchievements)): ?>
+
+                    <p>No achievements unlocked yet.</p>
+
+                <?php else: ?>
+
+                    <div class="achievement-grid">
+
+                        <?php foreach ($recentAchievements as $achievement): ?>
+
+                            <div class="achievement-card">
+
+                                <div class="achievement-icon">
+                                    <?= $achievement['badge_icon'] ?>
+                                </div>
+
+                                <h3>
+                                    <?= htmlspecialchars($achievement['name']) ?>
+                                </h3>
+
+                                <p>
+                                    <?= htmlspecialchars($achievement['description']) ?>
+                                </p>
+
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
 
     </div>
 

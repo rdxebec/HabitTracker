@@ -46,6 +46,30 @@
     <?php endif; ?>
 
     <?php require_once __DIR__ . '/navbar.php'; ?>
+    <script>
+        document.addEventListener(
+            'DOMContentLoaded',
+            () => {
+
+                const toast =
+                    document.getElementById(
+                        'achievement-toast'
+                    );
+
+                if (toast) {
+
+                    setTimeout(
+                        () => {
+
+                            toast.remove();
+
+                        },
+                        5000
+                    );
+                }
+            }
+        );
+    </script>
 
     <script>
         const toggle =

@@ -170,4 +170,22 @@ class User extends Model
             ':id' => $userId
         ]);
     }
+
+    public function updatePassword(
+        $userId,
+        $password
+    ) {
+        $sql = "
+        UPDATE users
+        SET password = :password
+        WHERE id = :id
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':password' => $password,
+            ':id' => $userId
+        ]);
+    }
 }

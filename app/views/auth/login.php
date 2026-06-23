@@ -2,8 +2,12 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
     <title>Login | Habit Tracker</title>
 
     <link rel="stylesheet"
@@ -11,36 +15,104 @@
 
     <link rel="stylesheet"
         href="/habittracker/public/assets/css/auth.css">
+
 </head>
 
 <body class="auth-page">
 
-    <div class="auth-card">
+    <div class="auth-container">
 
-        <h1>Login</h1>
+        <div class="auth-left">
 
-        <form action="/habittracker/public/login" method="POST">
+            <h1>🏆 Habit Tracker</h1>
 
-            <input
-                type="hidden"
-                name="csrf_token"
-                value="<?= $_SESSION['csrf_token']; ?>">
+            <p class="auth-tagline">
+                Build better habits.
+                Stay consistent.
+                Become your best self.
+            </p>
 
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" required>
-            </div>
+            <ul>
 
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" required>
-            </div>
+                <li>🔥 Track Daily Streaks</li>
 
-            <button type="submit" class="auth-btn">
-                Login
-            </button>
+                <li>🏅 Unlock Achievements</li>
 
-        </form>
+                <li>📈 View Analytics</li>
+
+                <li>⚡ Gain XP & Level Up</li>
+
+            </ul>
+
+        </div>
+
+        <div class="auth-card">
+
+            <h2>Welcome Back</h2>
+            <?php if (isset($_SESSION['error'])): ?>
+
+                <div class="error-message">
+
+                    <?= $_SESSION['error']; ?>
+
+                </div>
+
+                <?php unset($_SESSION['error']); ?>
+
+            <?php endif; ?>
+
+            <form
+                action="/habittracker/public/login"
+                method="POST">
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="<?= $_SESSION['csrf_token']; ?>">
+
+                <div class="form-group">
+
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Password</label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        required>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="auth-btn">
+
+                    Login
+
+                </button>
+
+            </form>
+
+            <p class="auth-footer">
+
+                Don't have an account?
+
+                <a href="/habittracker/public/register">
+                    Register
+                </a>
+
+            </p>
+
+        </div>
 
     </div>
 

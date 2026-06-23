@@ -43,6 +43,16 @@ $router->get(
 $router->get('/achievements', [AchievementController::class, 'index']);
 
 $router->get(
+    '/templates',
+    [TemplateController::class, 'index']
+);
+
+$router->get(
+    '/templates/use',
+    [TemplateController::class, 'use']
+);
+
+$router->get(
     '/challenges',
     [ChallengeController::class, 'index']
 );
@@ -69,4 +79,14 @@ $router->get(
 $router->get(
     '/analytics/day',
     [AnalyticsController::class,'day']
+);
+
+$router->get(
+    '/profile/password',
+    [DashboardController::class, 'changePassword']
+);
+
+$router->post(
+    '/profile/password',
+    [DashboardController::class, 'updatePassword']
 );

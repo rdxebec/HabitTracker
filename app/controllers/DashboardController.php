@@ -230,4 +230,99 @@ class DashboardController extends Controller
             'success' => true
         ]);
     }
+    public function changePassword()
+    {
+        if (!isset($_SESSION['logged_in'])) {
+
+            header(
+                'Location: /habittracker/public/login'
+            );
+
+            exit;
+        }
+
+        $this->view(
+            'profile/change-password'
+        );
+    }
+
+    public function updatePassword()
+    {
+        if (!isset($_SESSION['logged_in'])) {
+
+            header(
+                'Location: /habittracker/public/login'
+            );
+
+            exit;
+        }
+
+        $currentPassword =
+            $_POST['current_password'] ?? '';
+
+        $newPassword =
+            $_POST['new_password'] ?? '';
+
+        $confirmPassword =
+            $_POST['confirm_password'] ?? '';
+
+        $userModel = new User();
+
+        $user =
+            $userModel->findById(
+                $_SESSION['user_id']
+            );
+
+        if (
+            !password_verify(
+                $currentPassword,
+                $user['password']
+            )
+        ) {
+
+            $_SESSION['error'] =
+                'Current password is incorrect';
+
+            header(
+                'Location: /habittracker/public/profile/password'
+            );
+
+            exit;
+        }
+
+        if (
+            $newPassword !==
+            $confirmPassword
+        ) {
+
+            $_SESSION['error'] =
+                'Passwords do not match';
+
+            header(
+                'Location: /habittracker/public/profile/password'
+            );
+
+            exit;
+        }
+
+        $hash =
+            password_hash(
+                $newPassword,
+                PASSWORD_DEFAULT
+            );
+
+        $userModel->updatePassword(
+            $_SESSION['user_id'],
+            $hash
+        );
+
+        $_SESSION['success'] =
+            'Password updated successfully';
+
+        header(
+            'Location: /habittracker/public/profile'
+        );
+
+        exit;
+    }
 }

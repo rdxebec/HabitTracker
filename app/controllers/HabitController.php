@@ -296,6 +296,8 @@ class HabitController extends Controller
         if (!$logModel->isCompletedToday($habitId)) {
 
             $logModel->markComplete($habitId);
+            $_SESSION['achievement_notification'] =
+                '🏆 Habit Completed!';
 
             $userModel = new User();
             $challengeModel = new DailyChallenge();
@@ -454,6 +456,64 @@ class HabitController extends Controller
                 $_SESSION['achievement_notification'] =
                     '🏆 30 Day Streak!';
             }
+            // Consistency Starter (3 Day Streak)
+
+            if (
+                $longestStreak >= 3 &&
+                !$achievementModel->hasAchievement(
+                    $_SESSION['user_id'],
+                    7
+                )
+            ) {
+
+                $achievementModel->unlock(
+                    $_SESSION['user_id'],
+                    7
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 Consistency Starter Unlocked!';
+            }
+
+
+            // Consistency Pro (7 Day Streak)
+
+            if (
+                $longestStreak >= 7 &&
+                !$achievementModel->hasAchievement(
+                    $_SESSION['user_id'],
+                    8
+                )
+            ) {
+
+                $achievementModel->unlock(
+                    $_SESSION['user_id'],
+                    8
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 Consistency Pro Unlocked!';
+            }
+
+
+            // Habit Architect (10 Habits)
+
+            if (
+                $habitCount >= 10 &&
+                !$achievementModel->hasAchievement(
+                    $_SESSION['user_id'],
+                    6
+                )
+            ) {
+
+                $achievementModel->unlock(
+                    $_SESSION['user_id'],
+                    6
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '🏆 Habit Architect Unlocked!';
+            }
 
             // Update Level
             $user = $userModel->getById(
@@ -468,6 +528,23 @@ class HabitController extends Controller
                 $_SESSION['user_id'],
                 $level
             );
+
+            if (
+                $level >= 5 &&
+                !$achievementModel->hasAchievement(
+                    $_SESSION['user_id'],
+                    10
+                )
+            ) {
+
+                $achievementModel->unlock(
+                    $_SESSION['user_id'],
+                    10
+                );
+
+                $_SESSION['achievement_notification'] =
+                    '⭐ Level 5 Achievement Unlocked!';
+            }
         }
 
         header('Location: /habittracker/public/habits');

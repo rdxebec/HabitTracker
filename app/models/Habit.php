@@ -231,4 +231,26 @@ class Habit extends Model
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function existsByTitle(
+        $userId,
+        $title
+    ) {
+        $sql = "
+        SELECT id
+        FROM habits
+        WHERE user_id = ?
+        AND title = ?
+        LIMIT 1
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            $userId,
+            $title
+        ]);
+
+        return $stmt->fetch();
+    }
 }
