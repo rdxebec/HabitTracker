@@ -42,6 +42,10 @@
                 Analytics
             </a>
 
+            <button id="theme-toggle" class="theme-btn">
+                🌙
+            </button>
+
             <a href="/habittracker/public/logout">
                 Logout
             </a>

@@ -12,10 +12,35 @@ class DashboardController extends Controller
         $habitModel = new Habit();
         $logModel = new HabitLog();
         $userModel = new User();
+        $challengeModel = new DailyChallenge();
+        $achievementModel = new Achievement();
+
+        $recentAchievements =
+            $achievementModel->getUserAchievements(
+                $_SESSION['user_id']
+            );
+
+        $dailyChallenges =
+            $challengeModel->getAll();
+
+        $userChallenges = [];
+
+        foreach ($dailyChallenges as $challenge) {
+
+            $userChallenges[$challenge['id']] =
+                $challengeModel->hasCompleted(
+                    $_SESSION['user_id'],
+                    $challenge['id']
+                );
+        }
 
         $user = $userModel->getById(
             $_SESSION['user_id']
         );
+
+        $showLevelPopup =
+            $user['level'] >
+            $user['last_level_seen'];
 
         $currentXP = $user['xp'];
 
@@ -90,6 +115,12 @@ class DashboardController extends Controller
             'currentLevel' => $currentLevel,
             'xpRemaining' =>
             $xpForNextLevel - $currentXP,
+            'dailyChallenges' => $dailyChallenges,
+            'userChallenges' => $userChallenges,
+            'recentAchievements' =>
+            $recentAchievements,
+            'showLevelPopup' => $showLevelPopup,
+            'user' => $user,
 
             // XP System
             'xp' => $user['xp'],
@@ -158,6 +189,10 @@ class DashboardController extends Controller
                     $_SESSION['user_id']
                 )
             );
+        $recentAchievements =
+            $achievementModel->getUserAchievements(
+                $_SESSION['user_id']
+            );
 
         $this->view(
             'profile/index',
@@ -166,8 +201,33 @@ class DashboardController extends Controller
                 'totalHabits' => $totalHabits,
                 'totalCompletions' => $totalCompletions,
                 'longestStreak' => $longestStreak,
-                'achievements' => $achievements
+                'achievements' => $achievements,
+                'recentAchievements' =>
+                $recentAchievements
             ]
         );
+    }
+
+    public function hideLevelPopup()
+    {
+        if (!isset($_SESSION['logged_in'])) {
+            exit;
+        }
+
+        $userModel = new User();
+
+        $user =
+            $userModel->getById(
+                $_SESSION['user_id']
+            );
+
+        $userModel->updateLastLevelSeen(
+            $_SESSION['user_id'],
+            $user['level']
+        );
+
+        echo json_encode([
+            'success' => true
+        ]);
     }
 }

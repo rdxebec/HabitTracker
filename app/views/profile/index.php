@@ -71,6 +71,44 @@
 
     </div>
 
+    <div class="profile-achievements">
+
+        <h2>🏆 Achievements</h2>
+
+        <?php if (empty($recentAchievements)): ?>
+
+            <p>No achievements unlocked yet.</p>
+
+        <?php else: ?>
+
+            <div class="achievement-grid">
+
+                <?php foreach ($recentAchievements as $achievement): ?>
+
+                    <div class="achievement-card">
+
+                        <div class="achievement-icon">
+                            <?= $achievement['badge_icon'] ?>
+                        </div>
+
+                        <h3>
+                            <?= htmlspecialchars($achievement['name']) ?>
+                        </h3>
+
+                        <p>
+                            <?= htmlspecialchars($achievement['description']) ?>
+                        </p>
+
+                    </div>
+
+                <?php endforeach; ?>
+
+            </div>
+
+        <?php endif; ?>
+
+    </div>
+
 </div>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

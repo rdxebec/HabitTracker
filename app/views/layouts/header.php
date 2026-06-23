@@ -18,6 +18,10 @@
     <link rel="stylesheet"
         href="/habittracker/public/assets/css/habits.css">
 
+    <link
+        rel="stylesheet"
+        href="/habittracker/public/assets/css/achievements.css">
+
 </head>
 
 <body>
@@ -42,3 +46,42 @@
     <?php endif; ?>
 
     <?php require_once __DIR__ . '/navbar.php'; ?>
+
+    <script>
+        const toggle =
+            document.getElementById(
+                'theme-toggle'
+            );
+
+        if (
+            localStorage.getItem('theme') ===
+            'dark'
+        ) {
+            document.body.classList.add(
+                'dark-mode'
+            );
+        }
+
+        toggle?.addEventListener(
+            'click',
+            () => {
+
+                document.body.classList.toggle(
+                    'dark-mode'
+                );
+
+                localStorage.setItem(
+                    'theme',
+                    document.body.classList.contains(
+                        'dark-mode'
+                    ) ?
+                    'dark' :
+                    'light'
+                );
+            }
+        );
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>

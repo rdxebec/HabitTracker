@@ -152,4 +152,22 @@ class User extends Model
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function updateLastLevelSeen(
+        $userId,
+        $level
+    ) {
+        $sql = "
+        UPDATE users
+        SET last_level_seen = :level
+        WHERE id = :id
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':level' => $level,
+            ':id' => $userId
+        ]);
+    }
 }

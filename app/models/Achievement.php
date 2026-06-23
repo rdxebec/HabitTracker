@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/HabitLog.php';
 
 class Achievement extends Model
 {
@@ -80,8 +81,7 @@ class Achievement extends Model
     public function unlockIfNotExists(
         $userId,
         $achievementId
-    )
-    {
+    ) {
         if (
             !$this->hasAchievement(
                 $userId,
@@ -93,5 +93,73 @@ class Achievement extends Model
                 $achievementId
             );
         }
+    }
+
+    public function getAllAchievements()
+    {
+        $stmt = $this->db->query("
+        SELECT *
+        FROM achievements
+        ORDER BY target_value ASC
+    ");
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAchievementProgress(
+        $userId,
+        $achievement
+    ) {
+        switch ($achievement['type']) {
+
+            case 'habit_count':
+
+                $sql = "
+                SELECT COUNT(*) total
+                FROM habits
+                WHERE user_id = ?
+            ";
+
+                break;
+
+            case 'completion':
+
+                $sql = "
+                SELECT COUNT(*) total
+                FROM habit_logs hl
+                INNER JOIN habits h
+                    ON hl.habit_id = h.id
+                WHERE h.user_id = ?
+            ";
+
+                break;
+
+            case 'level':
+
+                $sql = "
+                SELECT level total
+                FROM users
+                WHERE id = ?
+            ";
+
+                break;
+
+            case 'streak':
+
+                $habitLog = new HabitLog();
+
+                return $habitLog->getLongestUserStreak(
+                    $userId
+                );
+
+            default:
+                return 0;
+        }
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([$userId]);
+
+        return (int)$stmt->fetchColumn();
     }
 }

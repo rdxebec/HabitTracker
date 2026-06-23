@@ -16,6 +16,11 @@ $router->get(
     [DashboardController::class, 'index']
 );
 
+$router->get(
+    '/dashboard/hideLevelPopup',
+    [DashboardController::class,'hideLevelPopup']
+);
+
 $router->get('/logout', [AuthController::class, 'logout']);
 
 $router->get('/habits', [HabitController::class, 'index']);

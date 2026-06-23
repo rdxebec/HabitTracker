@@ -1,4 +1,26 @@
 <?php require_once __DIR__ . '/layouts/header.php'; ?>
+<?php if ($showLevelPopup): ?>
+
+    <div class="level-popup">
+
+        <div class="level-popup-content">
+
+            <h1>🎉 LEVEL UP!</h1>
+
+            <p>
+                You reached Level
+                <?= $user['level'] ?>
+            </p>
+
+            <button id="close-level-popup">
+                Awesome!
+            </button>
+
+        </div>
+
+    </div>
+
+<?php endif; ?>
 
 <div class="level-card">
 
@@ -150,6 +172,56 @@
 
     </div>
 
+    <div class="challenge-widget">
+
+        <h2>
+            🔥 Today's Challenges
+        </h2>
+
+        <?php foreach (
+            $dailyChallenges as $challenge
+        ): ?>
+
+            <div class="challenge-item">
+
+                <strong>
+                    <?= htmlspecialchars(
+                        $challenge['title']
+                    ) ?>
+                </strong>
+
+                <br>
+
+                <small>
+                    <?= htmlspecialchars(
+                        $challenge['description']
+                    ) ?>
+                </small>
+
+                <br>
+
+                <?php if (
+                    $userChallenges[$challenge['id']]
+                ): ?>
+
+                    <span class="challenge-complete">
+                        ✅ Completed
+                    </span>
+
+                <?php else: ?>
+
+                    <span class="challenge-pending">
+                        ⏳ In Progress
+                    </span>
+
+                <?php endif; ?>
+
+            </div>
+
+        <?php endforeach; ?>
+
+    </div>
+
     <div class="quick-actions">
 
         <h2>
@@ -171,6 +243,44 @@
             </a>
 
         </div>
+
+    </div>
+
+    <div class="achievement-card">
+
+        <h2>
+            🏆 Recent Achievements
+        </h2>
+
+        <?php if (empty($recentAchievements)): ?>
+
+            <p>
+                No achievements unlocked yet.
+            </p>
+
+        <?php else: ?>
+
+            <ul class="achievement-list">
+
+                <?php foreach (
+                    $recentAchievements
+                    as $achievement
+                ): ?>
+
+                    <li>
+
+                    <li>
+                        <?= $achievement['badge_icon'] ?>
+                        <?= htmlspecialchars($achievement['name']) ?>
+                    </li>
+
+                    </li>
+
+                <?php endforeach; ?>
+
+            </ul>
+
+        <?php endif; ?>
 
     </div>
     <div class="recent-card">
@@ -239,5 +349,32 @@
 
     </div>
 </div>
+<script>
+    const closeBtn =
+        document.getElementById(
+            'close-level-popup'
+        );
 
+    if (closeBtn) {
+
+        closeBtn.addEventListener(
+            'click',
+            function() {
+
+                fetch(
+                        '/habittracker/public/dashboard/hideLevelPopup'
+                    )
+                    .then(() => {
+
+                        document.querySelector(
+                            '.level-popup'
+                        ).style.display = 'none';
+
+                    });
+
+            }
+        );
+
+    }
+</script>
 <?php require_once __DIR__ . '/layouts/footer.php'; ?>

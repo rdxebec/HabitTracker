@@ -11,7 +11,10 @@ class AchievementController extends Controller
 
         $achievementModel = new Achievement();
 
-        $achievements =
+        $allAchievements =
+            $achievementModel->getAllAchievements();
+
+        $userAchievements =
             $achievementModel->getUserAchievements(
                 $_SESSION['user_id']
             );
@@ -19,7 +22,9 @@ class AchievementController extends Controller
         $this->view(
             'achievements/index',
             [
-                'achievements' => $achievements
+                'allAchievements' => $allAchievements,
+                'userAchievements' => $userAchievements,
+                'achievementModel' => $achievementModel
             ]
         );
     }

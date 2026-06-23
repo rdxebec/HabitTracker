@@ -118,8 +118,11 @@ class HabitLog extends Model
             return 0;
         }
 
-        return round(
-            ($completed / $totalHabits) * 100
+        return min(
+            100,
+            round(
+                ($completed / max(1, $totalHabits)) * 100
+            )
         );
     }
 
