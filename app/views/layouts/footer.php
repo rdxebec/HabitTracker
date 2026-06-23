@@ -1,62 +1,43 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-const themeToggle =
-    document.getElementById('theme-toggle');
+        const buttons =
+            document.querySelectorAll('.theme-toggle');
 
-if (themeToggle) {
-
-    // Load saved theme
-    if (
-        localStorage.getItem('theme') === 'dark'
-    ) {
-
-        document.body.classList.add(
-            'dark-mode'
-        );
-
-        themeToggle.innerHTML =
-            '☀️ Light Mode';
-    }
-
-    themeToggle.addEventListener(
-        'click',
-        function () {
-
-            document.body.classList.toggle(
-                'dark-mode'
-            );
-
-            if (
-                document.body.classList.contains(
-                    'dark-mode'
-                )
-            ) {
-
-                localStorage.setItem(
-                    'theme',
-                    'dark'
-                );
-
-                themeToggle.innerHTML =
-                    '☀️ Light Mode';
-
-            } else {
-
-                localStorage.setItem(
-                    'theme',
-                    'light'
-                );
-
-                themeToggle.innerHTML =
-                    '🌙 Dark Mode';
-            }
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
         }
-    );
-}
 
+        buttons.forEach(btn => {
+
+            btn.innerHTML =
+                document.body.classList.contains('dark-mode') ?
+                '☀️' :
+                '🌙';
+
+            btn.addEventListener('click', () => {
+
+                document.body.classList.toggle('dark-mode');
+
+                const dark =
+                    document.body.classList.contains('dark-mode');
+
+                localStorage.setItem(
+                    'theme',
+                    dark ? 'dark' : 'light'
+                );
+
+                buttons.forEach(button => {
+                    button.innerHTML =
+                        dark ? '☀️' : '🌙';
+                });
+            });
+        });
+    });
 </script>
 
 </body>
+
 </html>

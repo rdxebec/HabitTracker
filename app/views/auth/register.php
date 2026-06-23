@@ -48,6 +48,21 @@
         </div>
 
         <div class="auth-card">
+            <?php if (!empty($_SESSION['errors'])): ?>
+
+                <div class="error-box">
+
+                    <?php foreach ($_SESSION['errors'] as $error): ?>
+
+                        <p><?= htmlspecialchars($error) ?></p>
+
+                    <?php endforeach; ?>
+
+                </div>
+
+                <?php unset($_SESSION['errors']); ?>
+
+            <?php endif; ?>
 
             <h2>Create Account</h2>
 
@@ -67,6 +82,7 @@
                     <input
                         type="text"
                         name="name"
+                        value="<?= htmlspecialchars($_SESSION['old']['name'] ?? '') ?>"
                         required>
 
                 </div>
@@ -78,6 +94,7 @@
                     <input
                         type="email"
                         name="email"
+                        value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>"
                         required>
 
                 </div>
@@ -146,9 +163,7 @@
     </div>
 
     <script>
-
-        function togglePasswords()
-        {
+        function togglePasswords() {
             const password =
                 document.getElementById(
                     'password'
@@ -160,16 +175,15 @@
                 );
 
             password.type =
-                password.type === 'password'
-                ? 'text'
-                : 'password';
+                password.type === 'password' ?
+                'text' :
+                'password';
 
             confirmPassword.type =
-                confirmPassword.type === 'password'
-                ? 'text'
-                : 'password';
+                confirmPassword.type === 'password' ?
+                'text' :
+                'password';
         }
-
     </script>
 
 </body>

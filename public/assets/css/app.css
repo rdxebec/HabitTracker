@@ -32,10 +32,10 @@ body{
 }
 
 .nav-links{
-
     display:flex;
-
+    align-items:center;
     gap:20px;
+    flex-wrap:wrap;
 }
 
 .nav-links a{
@@ -704,84 +704,7 @@ textarea.form-control{
     margin-left:15px;
 }
 
-/* Dark Mode */
 
-body.dark-mode{
-    background:#111827;
-    color:#f3f4f6;
-}
-
-body.dark-mode .card,
-body.dark-mode .stat-card,
-body.dark-mode .analytics-card,
-body.dark-mode .achievement-card,
-body.dark-mode .recent-card{
-    background:#1f2937;
-    color:white;
-}
-
-body.dark-mode .navbar{
-    background:#111827;
-}
-
-body.dark-mode a{
-    color:#93c5fd;
-}
-
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea{
-    background:#374151;
-    color:white;
-    border:1px solid #4b5563;
-}
-
-.auth-page{
-    background:#f5f7fb;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-
-.auth-card{
-    width:100%;
-    max-width:450px;
-    background:white;
-    padding:30px;
-    border-radius:12px;
-    box-shadow:0 4px 20px rgba(0,0,0,.1);
-}
-
-body.dark-mode.auth-page{
-    background:#0f172a;
-}
-
-body.dark-mode .auth-card{
-    background:#1e293b;
-    color:white;
-}
-
-body.dark-mode .auth-card input{
-    background:#334155;
-    color:white;
-    border:1px solid #475569;
-}
-
-body.dark-mode .auth-card{
-    background:#1e293b;
-    color:white;
-}
-
-body.dark-mode .auth-card input{
-    background:#334155;
-    color:white;
-    border:1px solid #475569;
-}
-
-body.dark-mode .auth-card label{
-    color:white;
-}
 
 .achievement-progress{
     width:100%;
@@ -947,38 +870,82 @@ body.dark-mode .auth-card label{
     background:#4338ca;
 }
 
-/* DARK MODE */
+/* =================================
+   GLOBAL DARK MODE
+================================= */
 
-.dark-mode {
-    background: #111827;
-    color: #f3f4f6;
+body.dark-mode{
+    background:#111827 !important;
+    color:#f3f4f6 !important;
 }
 
-.dark-mode .navbar {
-    background: #0f172a;
+/* Navbar */
+body.dark-mode .navbar{
+    background:#0f172a !important;
 }
 
-.dark-mode .stat-card,
-.dark-mode .achievement-card,
-.dark-mode .habit-card,
-.dark-mode .profile-sidebar,
-.dark-mode .auth-card {
-    background: #1f2937;
-    color: white;
+/* Cards */
+body.dark-mode .card,
+body.dark-mode .stat-card,
+body.dark-mode .habit-card,
+body.dark-mode .analytics-card,
+body.dark-mode .achievement-card,
+body.dark-mode .challenge-card,
+body.dark-mode .challenge-widget,
+body.dark-mode .level-card,
+body.dark-mode .recent-card,
+body.dark-mode .profile-sidebar,
+body.dark-mode .auth-card,
+body.dark-mode .form-card{
+    background:#1f2937 !important;
+    color:#ffffff !important;
 }
 
-.dark-mode input,
-.dark-mode select,
-.dark-mode textarea {
-    background: #374151;
-    color: white;
-    border: 1px solid #4b5563;
+/* Inputs */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select{
+    background:#374151 !important;
+    color:#ffffff !important;
+    border:1px solid #4b5563 !important;
 }
 
-.dark-mode a {
-    color: #93c5fd;
+/* Links */
+body.dark-mode a{
+    color:#93c5fd !important;
 }
 
-.dark-mode .container {
-    color: white;
+/* Tables */
+body.dark-mode table,
+body.dark-mode th,
+body.dark-mode td{
+    background:#1f2937 !important;
+    color:#ffffff !important;
+    border-color:#374151 !important;
+}
+
+/* Charts containers */
+body.dark-mode .chart-container{
+    background:#1f2937 !important;
+}
+
+/* Profile */
+body.dark-mode .profile-content{
+    color:white !important;
+}
+
+/* Buttons */
+body.dark-mode button{
+    color:white;
+}
+
+/* Hover */
+body.dark-mode .profile-sidebar a:hover,
+body.dark-mode .profile-sidebar button:hover{
+    background:#374151 !important;
+}
+
+.theme-btn{
+    position:relative;
+    z-index:99999;
 }

@@ -62,11 +62,16 @@ class AuthController extends Controller
 
         if (!empty($errors)) {
 
-            echo "<h2>Validation Errors</h2>";
+            $_SESSION['errors'] = $errors;
 
-            foreach ($errors as $error) {
-                echo "<p>{$error}</p>";
-            }
+            $_SESSION['old'] = [
+                'name' => $name,
+                'email' => $email
+            ];
+
+            header(
+                'Location: /habittracker/public/register'
+            );
 
             exit;
         }
@@ -83,7 +88,16 @@ class AuthController extends Controller
             'password' => $hashedPassword
         ]);
 
-        echo "Registration Successful";
+        $_SESSION['success'] =
+            'Registration successful. Please login.';
+            
+        unset($_SESSION['old']);
+
+        header(
+            'Location: /habittracker/public/login'
+        );
+
+        exit;
     }
     public function login()
     {

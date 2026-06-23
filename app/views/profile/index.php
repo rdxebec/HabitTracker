@@ -15,7 +15,7 @@
                 🔒 Change Password
             </a>
 
-            <button id="theme-toggle">
+            <button class="theme-toggle">
                 🌙 Dark Mode
             </button>
 
