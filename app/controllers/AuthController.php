@@ -145,6 +145,8 @@ class AuthController extends Controller
 
             $_SESSION['error'] =
                 'Invalid Email or Password';
+            
+            $_SESSION['old_email'] = $email;
 
             header(
                 'Location: /habittracker/public/login'
@@ -163,6 +165,8 @@ class AuthController extends Controller
             $_SESSION['error'] =
                 'Invalid Email or Password';
 
+            $_SESSION['old_email'] = $email;
+
             header(
                 'Location: /habittracker/public/login'
             );
@@ -177,6 +181,8 @@ class AuthController extends Controller
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['user_email'] = $user['email'];
+
+        unset($_SESSION['old_email']);
 
         header('Location: /habittracker/public/dashboard');
         exit;

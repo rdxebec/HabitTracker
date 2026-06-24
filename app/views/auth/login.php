@@ -77,6 +77,7 @@
                     <input
                         type="email"
                         name="email"
+                        value="<?= htmlspecialchars($_SESSION['old_email'] ?? '') ?>"
                         required>
 
                 </div>

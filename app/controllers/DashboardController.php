@@ -289,6 +289,17 @@ class DashboardController extends Controller
 
             exit;
         }
+        if (strlen($newPassword) < 8) {
+
+            $_SESSION['error'] =
+                'Password must be at least 8 characters';
+
+            header(
+                'Location: /habittracker/public/profile/password'
+            );
+
+            exit;
+        }
 
         if (
             $newPassword !==
@@ -320,7 +331,7 @@ class DashboardController extends Controller
             'Password updated successfully';
 
         header(
-            'Location: /habittracker/public/profile'
+            'Location: /habittracker/public/profile/password'
         );
 
         exit;

@@ -8,6 +8,22 @@
 
         <br>
 
+        <?php if (!empty($_SESSION['errors'])): ?>
+
+            <div class="alert alert-danger">
+
+                <?php foreach ($_SESSION['errors'] as $error): ?>
+
+                    <p><?= htmlspecialchars($error) ?></p>
+
+                <?php endforeach; ?>
+
+            </div>
+
+            <?php unset($_SESSION['errors']); ?>
+
+        <?php endif; ?>
+
         <form
             action="/habittracker/public/habits/store"
             method="POST">
@@ -26,8 +42,7 @@
                 <input
                     type="text"
                     name="title"
-                    class="form-control"
-                    placeholder="Example: Read 20 Pages"
+                    value="<?= htmlspecialchars($_SESSION['old']['title'] ?? '') ?>"
                     required>
 
             </div>
@@ -38,10 +53,7 @@
                     Description
                 </label>
 
-                <textarea
-                    name="description"
-                    class="form-control"
-                    placeholder="Describe your habit..."></textarea>
+                <textarea name="description"><?= htmlspecialchars($_SESSION['old']['description'] ?? '') ?></textarea>
 
             </div>
 
@@ -54,8 +66,7 @@
                 <input
                     type="text"
                     name="category"
-                    class="form-control"
-                    placeholder="Learning, Fitness, Health">
+                    value="<?= htmlspecialchars($_SESSION['old']['category'] ?? '') ?>">
 
             </div>
 

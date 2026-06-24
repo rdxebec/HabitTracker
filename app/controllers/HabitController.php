@@ -120,21 +120,27 @@ class HabitController extends Controller
 
         $errors = [];
 
+        $errors = [];
+
         if (empty($title)) {
             $errors[] = 'Title is required';
         }
 
         if (strlen($title) > 100) {
-            $errors[] = 'Title too long';
+            $errors[] = 'Title cannot exceed 100 characters';
+        }
+
+        if (empty($category)) {
+            $errors[] = 'Category is required';
         }
 
         if (!empty($errors)) {
 
-            echo "<h2>Validation Errors</h2>";
+            $_SESSION['errors'] = $errors;
 
-            foreach ($errors as $error) {
-                echo "<p>$error</p>";
-            }
+            $_SESSION['old'] = $_POST;
+
+            header('Location: /habittracker/public/habits/create');
 
             exit;
         }
@@ -149,6 +155,8 @@ class HabitController extends Controller
             'frequency' => $frequency,
             'priority' => $priority
         ]);
+
+        unset($_SESSION['old']);
 
         require_once __DIR__ . '/../models/Achievement.php';
         $achievementModel = new Achievement();
@@ -233,19 +241,60 @@ class HabitController extends Controller
 
         $id = (int)($_POST['id'] ?? 0);
 
+        $title = trim($_POST['title'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $category = trim($_POST['category'] ?? '');
+        $frequency = $_POST['frequency'] ?? 'daily';
+        $priority = $_POST['priority'] ?? 'medium';
+
+        $errors = [];
+
+        // Title validation
+        if (empty($title)) {
+            $errors[] = 'Title is required';
+        }
+
+        if (strlen($title) > 100) {
+            $errors[] = 'Title cannot exceed 100 characters';
+        }
+
+        // Category validation
+        if (empty($category)) {
+            $errors[] = 'Category is required';
+        }
+
+        // If validation fails
+        if (!empty($errors)) {
+
+            $_SESSION['errors'] = $errors;
+
+            $_SESSION['old'] = [
+                'title' => $title,
+                'description' => $description,
+                'category' => $category,
+                'frequency' => $frequency,
+                'priority' => $priority
+            ];
+
+            header('Location: /habittracker/public/habits/edit?id=' . $id);
+            exit;
+        }
+
         $habitModel = new Habit();
 
         $habitModel->updateHabit(
             $id,
             $_SESSION['user_id'],
             [
-                'title' => trim($_POST['title']),
-                'description' => trim($_POST['description']),
-                'category' => trim($_POST['category']),
-                'frequency' => $_POST['frequency'],
-                'priority' => $_POST['priority']
+                'title' => htmlspecialchars($title, ENT_QUOTES, 'UTF-8'),
+                'description' => htmlspecialchars($description, ENT_QUOTES, 'UTF-8'),
+                'category' => htmlspecialchars($category, ENT_QUOTES, 'UTF-8'),
+                'frequency' => $frequency,
+                'priority' => $priority
             ]
         );
+
+        unset($_SESSION['old']);
 
         header('Location: /habittracker/public/habits');
         exit;
