@@ -67,7 +67,7 @@
 
     <h1>
         Welcome
-        <?= htmlspecialchars($_SESSION['user_name']) ?>
+        <?= htmlspecialchars($_SESSION['user_name'], ENT_QUOTES, 'UTF-8') ?>
         👋
     </h1>
 

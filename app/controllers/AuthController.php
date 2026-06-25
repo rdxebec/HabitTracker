@@ -4,6 +4,10 @@ class AuthController extends Controller
 {
     public function register()
     {
+        if (isset($_SESSION['logged_in'])) {
+            header('Location: /habittracker/public/dashboard');
+            exit;
+        }
         // Generate CSRF token
         if (!isset($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -25,15 +29,35 @@ class AuthController extends Controller
             die('Invalid CSRF Token');
         }
 
+        $errors = [];
+
+
+
         $name = trim($_POST['name'] ?? '');
+
+        $name = preg_replace('/\s+/', ' ', trim($name));
+
+        if (strlen($name) < 2) {
+            $errors[] = "Name must be at least 2 characters.";
+        }
+
+        if (strlen($name) > 50) {
+            $errors[] = "Name cannot exceed 50 characters.";
+        }
+
+        if (!preg_match("/^[a-zA-Z ]+$/", $name)) {
+            $errors[] = "Name may contain only letters and spaces.";
+        }
         $email = trim($_POST['email'] ?? '');
+
+        if (strlen($email) > 255) {
+            $errors[] = "Email is too long.";
+        }
         $password = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
 
-        $errors = [];
-
         // Name validation
-        if (empty($name)) {
+        if ($name === '') {
             $errors[] = 'Name is required';
         }
 
@@ -46,6 +70,10 @@ class AuthController extends Controller
 
         // Password validation
         if (strlen($password) < 8) {
+
+            if (strlen($password) > 72) {
+                $errors[] = "Password cannot exceed 72 characters.";
+            }
             $errors[] = 'Password must be at least 8 characters';
         }
 
@@ -83,14 +111,14 @@ class AuthController extends Controller
         );
 
         $userModel->create([
-            'name' => htmlspecialchars($name),
-            'email' => htmlspecialchars($email),
+            'name' => $name,
+            'email' => $email,
             'password' => $hashedPassword
         ]);
 
         $_SESSION['success'] =
             'Registration successful. Please login.';
-            
+
         unset($_SESSION['old']);
 
         header(
@@ -101,6 +129,10 @@ class AuthController extends Controller
     }
     public function login()
     {
+        if (isset($_SESSION['logged_in'])) {
+            header('Location: /habittracker/public/dashboard');
+            exit;
+        }
         if (!isset($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] =
                 bin2hex(random_bytes(32));
@@ -130,10 +162,21 @@ class AuthController extends Controller
             $_SESSION['error'] =
                 'Email and Password are required';
 
+            $_SESSION['old_email'] = $email;
+
             header(
                 'Location: /habittracker/public/login'
             );
 
+            exit;
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+            $_SESSION['error'] = 'Invalid email format';
+
+            $_SESSION['old_email'] = $email;
+
+            header('Location: /habittracker/public/login');
             exit;
         }
 
@@ -145,7 +188,7 @@ class AuthController extends Controller
 
             $_SESSION['error'] =
                 'Invalid Email or Password';
-            
+
             $_SESSION['old_email'] = $email;
 
             header(

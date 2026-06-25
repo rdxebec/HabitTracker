@@ -33,9 +33,9 @@ $router->get('/habits/edit', [HabitController::class, 'edit']);
 
 $router->post('/habits/update', [HabitController::class, 'update']);
 
-$router->get('/habits/delete', [HabitController::class, 'delete']);
+$router->post('/habits/delete', [HabitController::class, 'delete']);
 
-$router->get(
+$router->post(
     '/habits/complete',
     [HabitController::class, 'complete']
 );

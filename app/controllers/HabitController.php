@@ -234,9 +234,18 @@ class HabitController extends Controller
 
     public function update()
     {
+        // Check login
         if (!isset($_SESSION['logged_in'])) {
             header('Location: /habittracker/public/login');
             exit;
+        }
+
+        // CSRF Validation
+        if (
+            !isset($_POST['csrf_token']) ||
+            !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+        ) {
+            die('Invalid CSRF Token');
         }
 
         $id = (int)($_POST['id'] ?? 0);
@@ -249,21 +258,19 @@ class HabitController extends Controller
 
         $errors = [];
 
-        // Title validation
-        if (empty($title)) {
-            $errors[] = 'Title is required';
+        // Validation
+        if ($title === '') {
+            $errors[] = 'Title is required.';
         }
 
         if (strlen($title) > 100) {
-            $errors[] = 'Title cannot exceed 100 characters';
+            $errors[] = 'Title cannot exceed 100 characters.';
         }
 
-        // Category validation
-        if (empty($category)) {
-            $errors[] = 'Category is required';
+        if ($category === '') {
+            $errors[] = 'Category is required.';
         }
 
-        // If validation fails
         if (!empty($errors)) {
 
             $_SESSION['errors'] = $errors;
@@ -276,7 +283,7 @@ class HabitController extends Controller
                 'priority' => $priority
             ];
 
-            header('Location: /habittracker/public/habits/edit?id=' . $id);
+            header("Location: /habittracker/public/habits/edit?id=$id");
             exit;
         }
 
@@ -295,19 +302,33 @@ class HabitController extends Controller
         );
 
         unset($_SESSION['old']);
+        unset($_SESSION['errors']);
 
         header('Location: /habittracker/public/habits');
         exit;
     }
-
     public function delete()
     {
+        // Check login
         if (!isset($_SESSION['logged_in'])) {
             header('Location: /habittracker/public/login');
             exit;
         }
 
-        $id = (int)($_GET['id'] ?? 0);
+        // CSRF Validation
+        if (
+            !isset($_POST['csrf_token']) ||
+            !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+        ) {
+            die('Invalid CSRF Token');
+        }
+
+        $id = (int)($_POST['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: /habittracker/public/habits');
+            exit;
+        }
 
         $habitModel = new Habit();
 
@@ -327,7 +348,14 @@ class HabitController extends Controller
             exit;
         }
 
-        $habitId = (int)($_GET['id'] ?? 0);
+        if (
+            !isset($_POST['csrf_token']) ||
+            $_POST['csrf_token'] !== $_SESSION['csrf_token']
+        ) {
+            die('Invalid CSRF Token');
+        }
+
+        $habitId = (int)($_POST['id'] ?? 0);
 
         $habitModel = new Habit();
 

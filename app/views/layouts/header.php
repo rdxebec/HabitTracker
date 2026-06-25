@@ -25,6 +25,13 @@
 </head>
 
 <body>
+
+    <?php
+    // Generate CSRF token once per session
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    ?>
     <?php if (
         isset(
             $_SESSION['achievement_notification']

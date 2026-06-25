@@ -33,9 +33,7 @@
                 <div class="stat-card">
                     <h3>Name</h3>
                     <h2>
-                        <?= htmlspecialchars(
-                            $user['name']
-                        ) ?>
+                        <?= htmlspecialchars($_SESSION['user_name'], ENT_QUOTES, 'UTF-8') ?>
                     </h2>
                 </div>
 

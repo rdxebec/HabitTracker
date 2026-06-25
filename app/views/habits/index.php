@@ -87,11 +87,30 @@
 
                         <p>❌ Not Completed</p>
 
-                        <a
-                            class="btn btn-success"
-                            href="/habittracker/public/habits/complete?id=<?= $habit['id'] ?>">
-                            Complete Today
-                        </a>
+                        <form
+                            action="/habittracker/public/habits/complete"
+                            method="POST"
+                            style="display:inline;">
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?= $habit['id'] ?>">
+
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="<?= $_SESSION['csrf_token'] ?>">
+
+                            <button
+                                type="submit"
+                                class="btn btn-success">
+
+                                Complete Today
+
+                            </button>
+
+                        </form>
 
                     <?php endif; ?>
 
@@ -103,12 +122,29 @@
                             Edit
                         </a>
 
-                        <a
-                            class="btn btn-danger"
-                            href="/habittracker/public/habits/delete?id=<?= $habit['id'] ?>"
-                            onclick="return confirm('Delete this habit?')">
-                            Delete
-                        </a>
+                        <form
+                            action="/habittracker/public/habits/delete"
+                            method="POST"
+                            style="display:inline;"
+                            onsubmit="return confirm('Delete this habit?');">
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?= $habit['id'] ?>">
+
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="<?= $_SESSION['csrf_token'] ?>">
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger">
+                                Delete
+                            </button>
+
+                        </form>
 
                         <a
                             href="/habittracker/public/habits/history?id=<?= $habit['id'] ?>"
