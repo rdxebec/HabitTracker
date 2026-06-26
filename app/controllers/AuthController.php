@@ -42,18 +42,23 @@ class AuthController extends Controller
 
         $name = preg_replace('/\s+/', ' ', trim($name));
 
-        if (strlen($name) < 2) {
-            $errors[] = "Name must be at least 2 characters.";
+        // Name validation
+        // Name validation
+        if ($name === '') {
+
+            $errors[] = 'Name is required';
+        } elseif (strlen($name) < 2) {
+
+            $errors[] = 'Name must be at least 2 characters.';
+        } elseif (strlen($name) > 50) {
+
+            $errors[] = 'Name cannot exceed 50 characters.';
+        } elseif (!preg_match("/^[a-zA-Z ]+$/", $name)) {
+
+            $errors[] = 'Name may contain only letters and spaces.';
         }
 
-        if (strlen($name) > 50) {
-            $errors[] = "Name cannot exceed 50 characters.";
-        }
-
-        if (!preg_match("/^[a-zA-Z ]+$/", $name)) {
-            $errors[] = "Name may contain only letters and spaces.";
-        }
-        $email = trim($_POST['email'] ?? '');
+        $email = strtolower(trim($_POST['email'] ?? ''));
 
         if (strlen($email) > 255) {
             $errors[] = "Email is too long.";
@@ -61,10 +66,7 @@ class AuthController extends Controller
         $password = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
 
-        // Name validation
-        if ($name === '') {
-            $errors[] = 'Name is required';
-        }
+
 
         // Email validation
         if (empty($email)) {
@@ -76,21 +78,24 @@ class AuthController extends Controller
         // Password validation
         if (strlen($password) < 8) {
 
-            if (strlen($password) > 72) {
-                $errors[] = "Password cannot exceed 72 characters.";
-            }
             $errors[] = 'Password must be at least 8 characters';
+        } elseif (strlen($password) > 72) {
+
+            $errors[] = 'Password cannot exceed 72 characters';
         }
 
         if ($password !== $confirmPassword) {
             $errors[] = 'Passwords do not match';
         }
 
-        $userModel = new User();
+        if (empty($errors)) {
 
-        // Check email already exists
-        if ($userModel->findByEmail($email)) {
-            $errors[] = 'Email already registered';
+            $userModel = new User();
+
+            if ($userModel->findByEmail($email)) {
+
+                $errors[] = 'Email already registered';
+            }
         }
 
         if (!empty($errors)) {
@@ -159,7 +164,7 @@ class AuthController extends Controller
             die('Invalid CSRF Token');
         }
 
-        $email = trim($_POST['email'] ?? '');
+        $email = strtolower(trim($_POST['email'] ?? ''));
         $password = $_POST['password'] ?? '';
 
         if (empty($email) || empty($password)) {
