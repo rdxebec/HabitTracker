@@ -80,17 +80,14 @@
                     name="frequency"
                     class="form-control">
 
-                    <option value="daily">
-                        Daily
-                    </option>
+                    <option value="daily"
+                        <?= (($_SESSION['old']['frequency'] ?? '') == 'daily') ? 'selected' : '' ?>>
 
-                    <option value="weekly">
-                        Weekly
-                    </option>
+                    <option value="weekly"
+                        <?= (($_SESSION['old']['frequency'] ?? '') == 'weekly') ? 'selected' : '' ?>>
 
-                    <option value="monthly">
-                        Monthly
-                    </option>
+                    <option value="monthly"
+                        <?= (($_SESSION['old']['frequency'] ?? '') == 'monthly') ? 'selected' : '' ?>>
 
                 </select>
 
@@ -106,17 +103,14 @@
                     name="priority"
                     class="form-control">
 
-                    <option value="low">
-                        Low
-                    </option>
+                    <option value="low"
+                        <?= (($_SESSION['old']['priority'] ?? '') == 'low') ? 'selected' : '' ?>>
 
-                    <option value="medium">
-                        Medium
-                    </option>
+                    <option value="medium"
+                        <?= (($_SESSION['old']['priority'] ?? '') == 'medium') ? 'selected' : '' ?>>
 
-                    <option value="high">
-                        High
-                    </option>
+                    <option value="high"
+                        <?= (($_SESSION['old']['priority'] ?? '') == 'high') ? 'selected' : '' ?>>
 
                 </select>
 
@@ -131,6 +125,8 @@
             </button>
 
         </form>
+
+        <?php unset($_SESSION['old']); ?>
 
     </div>
 

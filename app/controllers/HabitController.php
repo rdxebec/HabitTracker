@@ -123,20 +123,54 @@ class HabitController extends Controller
         $frequency = $_POST['frequency'] ?? 'daily';
         $priority = $_POST['priority'] ?? 'medium';
 
-        $errors = [];
+        $habitModel = new Habit();
 
         $errors = [];
 
-        if (empty($title)) {
+
+
+        // Remove extra spaces
+        $title = preg_replace('/\s+/', ' ', trim($title));
+
+        if ($title === '') {
             $errors[] = 'Title is required';
-        }
-
-        if (strlen($title) > 100) {
+        } elseif (strlen($title) < 2) {
+            $errors[] = 'Title must be at least 2 characters';
+        } elseif (strlen($title) > 100) {
             $errors[] = 'Title cannot exceed 100 characters';
         }
 
-        if (empty($category)) {
+        $category = preg_replace('/\s+/', ' ', trim($category));
+
+        if ($category === '') {
             $errors[] = 'Category is required';
+        } elseif (strlen($category) < 2) {
+            $errors[] = 'Category must be at least 2 characters';
+        } elseif (strlen($category) > 50) {
+            $errors[] = 'Category cannot exceed 50 characters';
+        }
+
+
+        if ($habitModel->habitExists($_SESSION['user_id'], $title)) {
+            $errors[] = 'You already have a habit with this title.';
+        }
+
+        $description = preg_replace('/\s+/', ' ', trim($description));
+
+        if (strlen($description) > 500) {
+            $errors[] = 'Description cannot exceed 500 characters';
+        }
+
+        $allowedFrequency = ['daily', 'weekly', 'monthly'];
+
+        if (!in_array($frequency, $allowedFrequency, true)) {
+            $errors[] = 'Invalid frequency selected';
+        }
+
+        $allowedPriority = ['low', 'medium', 'high'];
+
+        if (!in_array($priority, $allowedPriority, true)) {
+            $errors[] = 'Invalid priority selected';
         }
 
         if (!empty($errors)) {
@@ -150,13 +184,13 @@ class HabitController extends Controller
             exit;
         }
 
-        $habitModel = new Habit();
+
 
         $habitModel->create([
             'user_id' => $_SESSION['user_id'],
-            'title' => htmlspecialchars($title),
-            'description' => htmlspecialchars($description),
-            'category' => htmlspecialchars($category),
+            'title' => $title,
+            'description' => $description,
+            'category' => $category,
             'frequency' => $frequency,
             'priority' => $priority
         ]);
@@ -261,6 +295,8 @@ class HabitController extends Controller
         $frequency = $_POST['frequency'] ?? 'daily';
         $priority = $_POST['priority'] ?? 'medium';
 
+        $habitModel = new Habit();
+
         $errors = [];
 
         // Validation
@@ -274,6 +310,16 @@ class HabitController extends Controller
 
         if ($category === '') {
             $errors[] = 'Category is required.';
+        }
+
+        if (
+            $habitModel->habitExistsForUpdate(
+                $_SESSION['user_id'],
+                $title,
+                $id
+            )
+        ) {
+            $errors[] = 'You already have a habit with this title.';
         }
 
         if (!empty($errors)) {
@@ -292,17 +338,17 @@ class HabitController extends Controller
             exit;
         }
 
-        $habitModel = new Habit();
+
 
         $habitModel->updateHabit(
             $id,
             $_SESSION['user_id'],
             [
-                'title' => htmlspecialchars($title, ENT_QUOTES, 'UTF-8'),
-                'description' => htmlspecialchars($description, ENT_QUOTES, 'UTF-8'),
-                'category' => htmlspecialchars($category, ENT_QUOTES, 'UTF-8'),
+                'title' => $title,
+                'description' => $description,
+                'category' => $category,
                 'frequency' => $frequency,
-                'priority' => $priority
+                'priority' => $priority,
             ]
         );
 

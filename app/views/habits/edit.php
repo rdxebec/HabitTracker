@@ -32,8 +32,7 @@
                     type="text"
                     name="title"
                     class="form-control"
-                    value="<?= htmlspecialchars($habit['title']) ?>"
-                    required>
+                    value="<?= htmlspecialchars($_SESSION['old']['title'] ?? $habit['title']) ?>"                    required>
 
             </div>
 
@@ -45,7 +44,7 @@
 
                 <textarea
                     name="description"
-                    class="form-control"><?= htmlspecialchars($habit['description']) ?></textarea>
+                    class="form-control"><?= htmlspecialchars($_SESSION['old']['description'] ?? $habit['description']) ?></textarea>
 
             </div>
 
@@ -59,7 +58,7 @@
                     type="text"
                     name="category"
                     class="form-control"
-                    value="<?= htmlspecialchars($habit['category']) ?>">
+                    value="<?= htmlspecialchars($_SESSION['old']['category'] ?? $habit['category']) ?>">
 
             </div>
 

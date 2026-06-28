@@ -253,4 +253,33 @@ class Habit extends Model
 
         return $stmt->fetch();
     }
+
+    public function habitExists($userId, $title)
+    {
+        $sql = "SELECT id
+            FROM habits
+            WHERE user_id = ?
+            AND LOWER(title) = LOWER(?)
+            LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId, $title]);
+
+        return $stmt->fetch();
+    }
+
+    public function habitExistsForUpdate($userId, $title, $habitId)
+    {
+        $sql = "SELECT id
+            FROM habits
+            WHERE user_id = ?
+            AND LOWER(title) = LOWER(?)
+            AND id != ?
+            LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId, $title, $habitId]);
+
+        return $stmt->fetch();
+    }
 }
