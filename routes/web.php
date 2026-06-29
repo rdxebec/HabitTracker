@@ -56,7 +56,7 @@ $router->get(
     '/challenges',
     [ChallengeController::class, 'index']
 );
-$router->get(
+$router->post(
     '/challenges/join',
     [ChallengeController::class, 'join']
 );

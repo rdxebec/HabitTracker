@@ -11,15 +11,11 @@
             <div class="challenge-card">
 
                 <h3>
-                    <?= htmlspecialchars(
-                        $challenge['title']
-                    ) ?>
+                    <?= htmlspecialchars($challenge['title']) ?>
                 </h3>
 
                 <p>
-                    <?= htmlspecialchars(
-                        $challenge['description']
-                    ) ?>
+                    <?= htmlspecialchars($challenge['description']) ?>
                 </p>
 
                 <p>
@@ -28,39 +24,20 @@
                 </p>
 
                 <p>
-                    ⭐ <?= $challenge['xp_reward'] ?>
-                    XP
+                    ⭐ <?= $challenge['xp_reward'] ?> XP
                 </p>
 
-                <?php if (
-                    isset(
-                        $joined[$challenge['id']]
-                    )
-                ): ?>
+                <?php if (!empty($joined[$challenge['id']])): ?>
 
-                    <?php if (
-                        $joined[$challenge['id']]
-                    ): ?>
-
-                        <span class="completed-badge">
-                            ✅ Completed
-                        </span>
-
-                    <?php else: ?>
-
-                        <span class="joined-badge">
-                            🔥 In Progress
-                        </span>
-
-                    <?php endif; ?>
+                    <span class="completed-badge">
+                        ✅ Completed
+                    </span>
 
                 <?php else: ?>
 
-                    <a
-                        href="/habittracker/public/challenges/join?id=<?= $challenge['id'] ?>"
-                        class="btn btn-primary">
-                        Join Challenge
-                    </a>
+                    <span class="joined-badge">
+                        🔥 In Progress
+                    </span>
 
                 <?php endif; ?>
 

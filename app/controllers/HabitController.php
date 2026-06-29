@@ -197,7 +197,6 @@ class HabitController extends Controller
 
         unset($_SESSION['old']);
 
-        require_once __DIR__ . '/../models/Achievement.php';
         $achievementModel = new Achievement();
 
         $userHabits = $habitModel->getByUserId(
@@ -263,7 +262,8 @@ class HabitController extends Controller
             !$habit ||
             $habit['user_id'] != $_SESSION['user_id']
         ) {
-            die('Habit not found');
+            header('Location: /habittracker/public/habits');
+            exit;
         }
 
         $this->view('habits/edit', [
@@ -401,7 +401,10 @@ class HabitController extends Controller
 
         if (
             !isset($_POST['csrf_token']) ||
-            $_POST['csrf_token'] !== $_SESSION['csrf_token']
+            !hash_equals(
+                $_SESSION['csrf_token'],
+                $_POST['csrf_token']
+            )
         ) {
             die('Invalid CSRF Token');
         }
@@ -416,7 +419,8 @@ class HabitController extends Controller
             !$habit ||
             $habit['user_id'] != $_SESSION['user_id']
         ) {
-            die('Habit not found');
+            header('Location: /habittracker/public/habits');
+            exit;
         }
 
         $logModel = new HabitLog();
@@ -452,13 +456,13 @@ class HabitController extends Controller
 
             // Challenge 3 - First Completion
             if (
-                !$challengeModel->hasCompleted(
+                !$challengeModel->completedToday(
                     $_SESSION['user_id'],
                     3
                 )
             ) {
 
-                $challengeModel->completeChallenge(
+                $challengeModel->logCompletion(
                     $_SESSION['user_id'],
                     3
                 );
@@ -468,20 +472,20 @@ class HabitController extends Controller
                     10
                 );
 
+
                 $_SESSION['achievement_notification'] =
                     '🔥 First Completion Challenge Complete!';
             }
-
             // Challenge 1 - Complete 3 Habits
             if (
                 $completedToday >= 3 &&
-                !$challengeModel->hasCompleted(
+                !$challengeModel->completedToday(
                     $_SESSION['user_id'],
                     1
                 )
             ) {
 
-                $challengeModel->completeChallenge(
+                $challengeModel->logCompletion(
                     $_SESSION['user_id'],
                     1
                 );
@@ -499,13 +503,13 @@ class HabitController extends Controller
             if (
                 $habitCount > 0 &&
                 $completedToday >= $habitCount &&
-                !$challengeModel->hasCompleted(
+                !$challengeModel->completedToday(
                     $_SESSION['user_id'],
                     2
                 )
             ) {
 
-                $challengeModel->completeChallenge(
+                $challengeModel->logCompletion(
                     $_SESSION['user_id'],
                     2
                 );
@@ -696,7 +700,8 @@ class HabitController extends Controller
             !$habit ||
             $habit['user_id'] != $_SESSION['user_id']
         ) {
-            die('Habit not found');
+            header('Location: /habittracker/public/habits');
+            exit;
         }
 
         $logModel = new HabitLog();

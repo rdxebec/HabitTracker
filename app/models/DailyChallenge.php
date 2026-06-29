@@ -16,48 +16,38 @@ class DailyChallenge extends Model
     }
     public function hasCompleted($userId, $challengeId)
     {
-        $sql = "
+        $stmt = $this->db->prepare("
         SELECT id
         FROM user_challenges
-        WHERE user_id = :user_id
-        AND challenge_id = :challenge_id
+        WHERE user_id = ?
+        AND challenge_id = ?
+        AND DATE(completed_at) = CURDATE()
         LIMIT 1
-    ";
-
-        $stmt = $this->db->prepare($sql);
+    ");
 
         $stmt->execute([
-            ':user_id' => $userId,
-            ':challenge_id' => $challengeId
+            $userId,
+            $challengeId
         ]);
 
-        return $stmt->fetch();
+        return (bool)$stmt->fetch();
     }
-
     public function completeChallenge($userId, $challengeId)
     {
-        $sql = "
-        INSERT INTO user_challenges
-        (
-            user_id,
-            challenge_id,
-            completed,
-            completed_at
-        )
-        VALUES
-        (
-            :user_id,
-            :challenge_id,
-            1,
-            NOW()
-        )
-    ";
-
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare("
+        UPDATE user_challenges
+        SET
+            completed = 1,
+            completed_at = NOW()
+        WHERE
+            user_id = ?
+        AND
+            challenge_id = ?
+    ");
 
         return $stmt->execute([
-            ':user_id' => $userId,
-            ':challenge_id' => $challengeId
+            $userId,
+            $challengeId
         ]);
     }
 
@@ -93,5 +83,43 @@ class DailyChallenge extends Model
             $userId,
             $challenge['xp_reward']
         );
+    }
+
+    public function completedToday($userId, $challengeId)
+    {
+        $sql = "
+        SELECT id
+        FROM challenge_logs
+        WHERE user_id = ?
+        AND challenge_id = ?
+        AND DATE(completed_at) = CURDATE()
+        LIMIT 1
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId, $challengeId]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function logCompletion($userId, $challengeId)
+    {
+        $sql = "
+        INSERT INTO challenge_logs
+        (
+            user_id,
+            challenge_id,
+            completed_at
+        )
+        VALUES
+        (?, ?, NOW())
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            $userId,
+            $challengeId
+        ]);
     }
 }

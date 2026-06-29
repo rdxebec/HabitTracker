@@ -81,13 +81,13 @@
                     class="form-control">
 
                     <option value="daily"
-                        <?= (($_SESSION['old']['frequency'] ?? '') == 'daily') ? 'selected' : '' ?>>
+                        <?= (($_SESSION['old']['frequency'] ?? '') == 'daily') ? 'selected' : '' ?>>Daily</option>
 
                     <option value="weekly"
-                        <?= (($_SESSION['old']['frequency'] ?? '') == 'weekly') ? 'selected' : '' ?>>
+                        <?= (($_SESSION['old']['frequency'] ?? '') == 'weekly') ? 'selected' : '' ?>>Weekly</option>
 
                     <option value="monthly"
-                        <?= (($_SESSION['old']['frequency'] ?? '') == 'monthly') ? 'selected' : '' ?>>
+                        <?= (($_SESSION['old']['frequency'] ?? '') == 'monthly') ? 'selected' : '' ?>>Monthly</option>
 
                 </select>
 
@@ -104,13 +104,13 @@
                     class="form-control">
 
                     <option value="low"
-                        <?= (($_SESSION['old']['priority'] ?? '') == 'low') ? 'selected' : '' ?>>
+                        <?= (($_SESSION['old']['priority'] ?? '') == 'low') ? 'selected' : '' ?>>Low</option>
 
                     <option value="medium"
-                        <?= (($_SESSION['old']['priority'] ?? '') == 'medium') ? 'selected' : '' ?>>
+                        <?= (($_SESSION['old']['priority'] ?? '') == 'medium') ? 'selected' : '' ?>>Medium</option>
 
                     <option value="high"
-                        <?= (($_SESSION['old']['priority'] ?? '') == 'high') ? 'selected' : '' ?>>
+                        <?= (($_SESSION['old']['priority'] ?? '') == 'high') ? 'selected' : '' ?>>High</option>
 
                 </select>
 
