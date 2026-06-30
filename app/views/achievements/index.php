@@ -37,9 +37,13 @@
 
                 ?>
 
+                <?php
+                $displayCurrent = min($current, $target);
+                ?>
+
                 <p>
                     Progress:
-                    <?= $current ?>
+                    <?= $displayCurrent ?>
                     /
                     <?= $target ?>
                 </p>
@@ -52,8 +56,8 @@
                             <?= min(
                                 100,
                                 ($target > 0)
-                                ? ($current / $target) * 100
-                                : 0
+                                    ? ($current / $target) * 100
+                                    : 0
                             ) ?>%;
                             ">
                     </div>

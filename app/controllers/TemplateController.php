@@ -34,50 +34,49 @@ class TemplateController extends Controller
             exit;
         }
 
-        $templateId =
-            (int)($_GET['id'] ?? 0);
+        $templateId = (int)($_GET['id'] ?? 0);
 
-        $templateModel =
-            new Template();
+        // Invalid ID
+        if ($templateId <= 0) {
+            $_SESSION['achievement_notification'] =
+                "❌ Invalid template.";
 
-        $habitModel =
-            new Habit();
+            header('Location: /habittracker/public/templates');
+            exit;
+        }
 
-        $templateHabits =
-            $templateModel->getHabits(
-                $templateId
-            );
+        $templateModel = new Template();
+        $habitModel = new Habit();
+
+        $templateHabits = $templateModel->getHabits($templateId);
+
+        // Template doesn't exist
+        if (empty($templateHabits)) {
+            $_SESSION['achievement_notification'] =
+                "❌ Template not found.";
+
+            header('Location: /habittracker/public/templates');
+            exit;
+        }
 
         $imported = 0;
 
-        foreach (
-            $templateHabits
-            as $templateHabit
-        ) {
+        foreach ($templateHabits as $templateHabit) {
+
             if (
                 !$habitModel->existsByTitle(
                     $_SESSION['user_id'],
                     $templateHabit['title']
                 )
             ) {
+
                 $habitModel->create([
-                    'user_id' =>
-                    $_SESSION['user_id'],
-
-                    'title' =>
-                    $templateHabit['title'],
-
-                    'description' =>
-                    $templateHabit['description'],
-
-                    'category' =>
-                    'Template',
-
-                    'frequency' =>
-                    'daily',
-
-                    'priority' =>
-                    'medium'
+                    'user_id' => $_SESSION['user_id'],
+                    'title' => $templateHabit['title'],
+                    'description' => $templateHabit['description'],
+                    'category' => 'Template',
+                    'frequency' => 'daily',
+                    'priority' => 'medium'
                 ]);
 
                 $imported++;
@@ -87,16 +86,14 @@ class TemplateController extends Controller
         if ($imported > 0) {
 
             $_SESSION['achievement_notification'] =
-                "📚 Imported {$imported} habits!";
+                "✅ Successfully imported {$imported} habits.";
         } else {
 
             $_SESSION['achievement_notification'] =
-                "⚠️ Template already imported.";
+                "⚠️ All habits from this template already exist.";
         }
-        header(
-            'Location: /habittracker/public/habits'
-        );
 
+        header('Location: /habittracker/public/habits');
         exit;
     }
 }
